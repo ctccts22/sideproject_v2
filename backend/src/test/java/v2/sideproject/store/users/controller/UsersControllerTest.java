@@ -20,8 +20,8 @@ import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.RolesName;
 import v2.sideproject.store.user.enums.UsersStatus;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
-import v2.sideproject.store.user.vo.UsersDetailsRequestVo;
-import v2.sideproject.store.user.vo.UsersDetailsResponseVo;
+import v2.sideproject.store.user.vo.request.UsersDetailsRequestVo;
+import v2.sideproject.store.user.vo.response.UsersDetailsResponseVo;
 
 import java.util.UUID;
 

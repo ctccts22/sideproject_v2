@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.vo;
+package v2.sideproject.store.user.vo.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -11,13 +11,13 @@ import v2.sideproject.store.user.enums.RolesName;
 import v2.sideproject.store.user.enums.UsersStatus;
 
 @Schema(
-        name = "Response",
-        description = "Schema to hold successful response Users Detail information"
+        name = "Request Search Condition",
+        description = "Schema to hold successful Request Search Condition information"
 )
 @Data
 @AllArgsConstructor
 @Builder
-public class UsersDetailsResponseVo {
+public class UsersDetailsSearchConditionRequestVo {
 
     @Email
     @NotEmpty(message = "Email cannot be null or empty")
@@ -27,10 +27,6 @@ public class UsersDetailsResponseVo {
     @NotEmpty(message = "Name cannot be null or empty")
     @Schema(description = "User's name", example = "John Doe")
     private String name;
-
-    @NotEmpty(message = "Password cannot be null or empty")
-    @Schema(description = "User's password", example = "password123")
-    private String password;
 
     @NotNull(message = "Status cannot be null")
     @Schema(description = "User's status", example = "ACTIVE")
@@ -44,18 +40,9 @@ public class UsersDetailsResponseVo {
     @Schema(description = "User's position", example = "Manager")
     private String position;
 
-    @NotEmpty(message = "Cellphone number cannot be null or empty")
-    @Schema(description = "User's cellphone number", example = "123-456-7890")
-    private String cellphone;
-
-    @Schema(description = "User's telephone number", example = "098-765-4321")
-    private String telephone;
-
-    // Role join
     @Schema(description = "RoleName associated with the user", example = "2")
     private RolesName roleName;
 
-    // company join
     @Schema(description = "companyName associated with the user", example = "3")
     private String companyName;
 

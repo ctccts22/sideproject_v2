@@ -16,7 +16,7 @@ import v2.sideproject.store.user.enums.RolesName;
 import v2.sideproject.store.user.enums.UsersStatus;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
-import v2.sideproject.store.user.vo.UsersDetailsSearchConditionRequestVo;
+import v2.sideproject.store.user.vo.request.UsersDetailsSearchConditionRequestVo;
 
 import java.util.UUID;
 

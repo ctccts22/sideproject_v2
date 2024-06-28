@@ -20,7 +20,7 @@ import v2.sideproject.store.user.enums.UsersStatus;
 import v2.sideproject.store.user.mapper.UsersMapper;
 import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
-import v2.sideproject.store.user.vo.UsersDetailsRequestVo;
+import v2.sideproject.store.user.vo.request.UsersDetailsRequestVo;
 
 import java.util.Optional;
 import java.util.UUID;

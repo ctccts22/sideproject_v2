@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.vo;
+package v2.sideproject.store.user.vo.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

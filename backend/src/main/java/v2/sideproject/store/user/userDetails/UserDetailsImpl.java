@@ -24,10 +24,6 @@ public class UserDetailsImpl implements UserDetails {
         return authorities;
     }
 
-    public String getRoleNames() {
-        return users.getRoles().getName().toString();
-    }
-
     @Override
     public String getPassword() {
         return users.getPassword();

@@ -17,8 +17,8 @@ import v2.sideproject.store.user.mapper.UsersMapper;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.UsersService;
-import v2.sideproject.store.user.vo.UsersDetailsRequestVo;
-import v2.sideproject.store.user.vo.UsersDetailsResponseVo;
+import v2.sideproject.store.user.vo.request.UsersDetailsRequestVo;
+import v2.sideproject.store.user.vo.response.UsersDetailsResponseVo;
 
 import java.util.Optional;
 

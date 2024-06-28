@@ -16,9 +16,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.error.ErrorResponseDto;
 import v2.sideproject.store.user.constants.UsersConstants;
-import v2.sideproject.store.user.vo.UsersDetailsRequestVo;
-import v2.sideproject.store.user.vo.UsersDetailsResponseVo;
-import v2.sideproject.store.user.vo.UsersStatusResponseVo;
+import v2.sideproject.store.user.vo.request.UsersDetailsRequestVo;
+import v2.sideproject.store.user.vo.response.UsersDetailsResponseVo;
+import v2.sideproject.store.user.vo.response.UsersStatusResponseVo;
 import v2.sideproject.store.user.service.UsersService;
 
 @Tag(

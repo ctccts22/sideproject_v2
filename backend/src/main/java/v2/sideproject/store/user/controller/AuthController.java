@@ -17,10 +17,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.user.constants.AuthConstants;
-import v2.sideproject.store.user.dto.LoginDto;
+import v2.sideproject.store.user.vo.request.UsersLoginRequestVo;
 import v2.sideproject.store.user.service.AuthService;
-import v2.sideproject.store.user.vo.UsersInfoResponseVo;
-import v2.sideproject.store.user.vo.UsersStatusResponseVo;
+import v2.sideproject.store.user.vo.response.UsersInfoResponseVo;
+import v2.sideproject.store.user.vo.response.UsersStatusResponseVo;
 
 
 @RequestMapping(path = "/api/auth", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -60,9 +60,9 @@ public class AuthController {
     }
     )
     @PostMapping(path = "/login")
-    public ResponseEntity<UsersStatusResponseVo> Login(@RequestBody LoginDto loginDto,
+    public ResponseEntity<UsersStatusResponseVo> Login(@RequestBody UsersLoginRequestVo usersLoginRequestVo,
                                                        HttpServletResponse response) throws BadRequestException {
-        authService.login(loginDto, response);
+        authService.login(usersLoginRequestVo, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new UsersStatusResponseVo(AuthConstants.STATUS_200, AuthConstants.MESSAGE_Login_200));

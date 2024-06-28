@@ -11,22 +11,22 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @OpenAPIDefinition(
         info = @Info(
-                title = "NEUROCHEMv3 REST API Documentation",
-                description = "NEUROCHEMv3 REST API Documentation",
+                title = "SideprojectV2 REST API Documentation",
+                description = "SideprojectV2 REST API Documentation",
                 version = "v1",
                 contact = @Contact(
                         name = "GYUNO LEE",
-                        email = "GyunoLee@neurolines.net",
-                        url = "https://www.neurochem.io"
+                        email = "ctccts22@gmail.com",
+                        url = "https://www.glbras.store"
                 ),
                 license = @License(
                         name = "Apache 2.0",
-                        url = "https://www.neurochem.io"
+                        url = "https://www.glbras.store"
                 )
         ),
         externalDocs = @ExternalDocumentation(
-                description =  "NEUROCHEMv3 REST API Documentation",
-                url = "https://www.NEUROCHEMv3.com/swagger-ui.html"
+                description =  "SideprojectV2 REST API Documentation",
+                url = "https://www.glbras.store/swagger-ui.html"
         )
 )
 public class SideprojectV2Application {

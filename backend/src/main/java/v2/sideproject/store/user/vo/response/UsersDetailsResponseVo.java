@@ -1,20 +1,23 @@
-package v2.sideproject.store.user.vo;
+package v2.sideproject.store.user.vo.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import v2.sideproject.store.user.enums.RolesName;
+import v2.sideproject.store.user.enums.UsersStatus;
 
 @Schema(
         name = "Response",
         description = "Schema to hold successful response Users Detail information"
 )
 @Data
-@Builder
 @AllArgsConstructor
-public class UsersDetailsRequestVo {
+@Builder
+public class UsersDetailsResponseVo {
 
     @Email
     @NotEmpty(message = "Email cannot be null or empty")
@@ -28,6 +31,10 @@ public class UsersDetailsRequestVo {
     @NotEmpty(message = "Password cannot be null or empty")
     @Schema(description = "User's password", example = "password123")
     private String password;
+
+    @NotNull(message = "Status cannot be null")
+    @Schema(description = "User's status", example = "ACTIVE")
+    private UsersStatus status;
 
     @NotEmpty(message = "Department cannot be null or empty")
     @Schema(description = "User's department", example = "Sales")
@@ -43,6 +50,10 @@ public class UsersDetailsRequestVo {
 
     @Schema(description = "User's telephone number", example = "098-765-4321")
     private String telephone;
+
+    // Role join
+    @Schema(description = "RoleName associated with the user", example = "2")
+    private RolesName roleName;
 
     // company join
     @Schema(description = "companyName associated with the user", example = "3")

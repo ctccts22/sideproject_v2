@@ -4,8 +4,8 @@ import v2.sideproject.store.company.entity.Companies;
 import v2.sideproject.store.user.dto.UsersDto;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
-import v2.sideproject.store.user.vo.UsersDetailsRequestVo;
-import v2.sideproject.store.user.vo.UsersDetailsResponseVo;
+import v2.sideproject.store.user.vo.request.UsersDetailsRequestVo;
+import v2.sideproject.store.user.vo.response.UsersDetailsResponseVo;
 
 public class UsersMapper {
     public static Users mapToUsers(UsersDto usersDto) {

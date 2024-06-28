@@ -17,11 +17,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import v2.sideproject.store.jwt.JwtTokenProvider;
 import v2.sideproject.store.user.constants.AuthConstants;
-import v2.sideproject.store.user.dto.LoginDto;
+import v2.sideproject.store.user.vo.request.UsersLoginRequestVo;
 import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.AuthService;
 import v2.sideproject.store.user.userDetails.CustomUserDetails;
-import v2.sideproject.store.user.vo.UsersInfoResponseVo;
+import v2.sideproject.store.user.vo.response.UsersInfoResponseVo;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -42,15 +42,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void login(LoginDto loginDto, HttpServletResponse response) {
+    public void login(UsersLoginRequestVo usersLoginRequestVo, HttpServletResponse response) {
 
-        usersRepository.findByEmail(loginDto.getEmail())
+        usersRepository.findByEmail(usersLoginRequestVo.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(AuthConstants.MESSAGE_404));
 
         Authentication authentication;
         try{
             authentication =  authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
+                    new UsernamePasswordAuthenticationToken(usersLoginRequestVo.getEmail(), usersLoginRequestVo.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 

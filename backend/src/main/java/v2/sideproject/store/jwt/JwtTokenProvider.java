@@ -56,8 +56,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-
-
     public String createRefreshToken(Authentication authentication) {
         UUID refreshTokenUUID = UUID.randomUUID();
         redisTemplate.opsForValue().set(refreshTokenUUID.toString(), authentication.getName(), Duration.ofDays(1));
