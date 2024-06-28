@@ -15,7 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import v2.sideproject.store.jwt.TokenProvider;
+import v2.sideproject.store.jwt.JwtTokenProvider;
 import v2.sideproject.store.user.constants.AuthConstants;
 import v2.sideproject.store.user.dto.LoginDto;
 import v2.sideproject.store.user.repository.UsersRepository;
@@ -34,7 +34,7 @@ import static org.springframework.util.StringUtils.*;
 public class AuthServiceImpl implements AuthService {
     private static final long maxAgeForCookie = 7 * 24 * 60 * 60;
     private final AuthenticationManager authenticationManager;
-    private final TokenProvider tokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
     private final UsersRepository usersRepository;
     private final CustomUserDetails customUserDetails;
@@ -54,11 +54,11 @@ public class AuthServiceImpl implements AuthService {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String accessToken = tokenProvider.createAccessToken(authentication);
-            String refreshToken = tokenProvider.createRefreshToken(authentication);
+            String accessToken = jwtTokenProvider.createAccessToken(authentication);
+            String refreshToken = jwtTokenProvider.createRefreshToken(authentication);
 
             response.addHeader("Authorization", "Bearer " + accessToken);
-            tokenProvider.createRefreshTokenCookie(response, "refreshToken", refreshToken, maxAgeForCookie);
+            jwtTokenProvider.createRefreshTokenCookie(response, "refreshToken", refreshToken, maxAgeForCookie);
 
 
         }catch(BadCredentialsException e){
@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
                     .findFirst();
 
             cookieValue.ifPresent(value -> {
-                tokenProvider.deleteRefreshTokenCookie(response, "refreshToken");
+                jwtTokenProvider.deleteRefreshTokenCookie(response, "refreshToken");
                 // refreshToken delete
                 redisTemplate.delete(value);
             });
@@ -119,7 +119,7 @@ public class AuthServiceImpl implements AuthService {
 
             cookieValue.ifPresentOrElse(
                     refreshToken -> {
-                        String accessToken = tokenProvider.searchAccessTokenByRefreshToken(refreshToken);
+                        String accessToken = jwtTokenProvider.searchAccessTokenByRefreshToken(refreshToken);
                         if (accessToken != null) {
                             log.info("Access token found: {}", accessToken);
                             response.setHeader("Authorization", "Bearer " + accessToken);
@@ -158,7 +158,7 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && hasText(authentication.getName())) {
             log.info("Authenticated user: " + authentication.getName());
-            tokenProvider.searchAccessTokenByEmail(authentication);
+            jwtTokenProvider.searchAccessTokenByEmail(authentication);
         } else {
             log.warn("No authenticated user found in the security context.");
         }

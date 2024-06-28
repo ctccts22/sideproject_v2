@@ -29,7 +29,7 @@ import static org.springframework.util.StringUtils.*;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class TokenProvider {
+public class JwtTokenProvider {
     @Value("${app.jwt-secret}")
     private String secretKey;
     @Value("${app.jwt-expiration-milliseconds}")
