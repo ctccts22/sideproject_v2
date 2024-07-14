@@ -3,9 +3,13 @@ package v2.sideproject.store.user.vo.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import v2.sideproject.store.user.enums.Gender;
+import v2.sideproject.store.user.enums.MobileCarrier;
+import v2.sideproject.store.user.enums.UsersStatus;
 
 @Schema(
         name = "Response",
@@ -29,28 +33,23 @@ public class UsersDetailsRequestVo {
     @Schema(description = "User's password", example = "password123")
     private String password;
 
-    @NotEmpty(message = "Department cannot be null or empty")
-    @Schema(description = "User's department", example = "Sales")
-    private String department;
+    @NotEmpty(message = "Name cannot be null or empty")
+    @Schema(description = "User's birth", example = "950315")
+    private String birth;
 
-    @NotEmpty(message = "Position cannot be null or empty")
-    @Schema(description = "User's position", example = "Manager")
-    private String position;
+    @NotNull(message = "Name cannot be null or empty")
+    @Schema(description = "User's gender", example = "MALE")
+    private Gender gender;
+
+    @NotNull(message = "Status cannot be null")
+    @Schema(description = "User's status", example = "APPROVED")
+    private UsersStatus status;
+
+    @NotNull(message = "Status cannot be null")
+    @Schema(description = "User's mobileCarrier", example = "KT")
+    private MobileCarrier mobileCarrier;
 
     @NotEmpty(message = "Cellphone number cannot be null or empty")
-    @Schema(description = "User's cellphone number", example = "123-456-7890")
-    private String cellphone;
-
-    @Schema(description = "User's telephone number", example = "098-765-4321")
-    private String telephone;
-
-    // company join
-    @Schema(description = "companyName associated with the user", example = "3")
-    private String companyName;
-
-    @Schema(description = "parentCompany associated with the user", example = "3")
-    private String parentCompany;
-
-    @Schema(description = "address associated with the user", example = "3")
-    private String address;
+    @Schema(description = "User's phone number", example = "123-456-7890")
+    private String phone;
 }

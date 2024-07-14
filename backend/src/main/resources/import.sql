@@ -1,1 +1,0 @@
-insert into ROLES(role_id, name) values ( '1', 'PENDING' )

@@ -149,7 +149,7 @@ public class AuthServiceImpl implements AuthService {
 
         return UsersInfoResponseVo.builder()
                 .email(usersInfo.getEmail())
-                .roleName(usersInfo.getRoles().getName().toString())
+                .roleName(usersInfo.getRoles().getName())
                 .build();
     }
 

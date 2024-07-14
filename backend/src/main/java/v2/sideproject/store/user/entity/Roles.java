@@ -15,7 +15,7 @@ import v2.sideproject.store.user.enums.RolesName;
 public class Roles {
 
     @Id
-    @Column(name = "role_id", nullable = false)
+    @Column(name = "roleId", nullable = false)
     private String roleId;
 
     @Enumerated(EnumType.STRING)

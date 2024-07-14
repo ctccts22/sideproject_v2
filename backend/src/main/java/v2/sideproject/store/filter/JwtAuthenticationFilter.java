@@ -18,7 +18,7 @@ import java.io.IOException;
 
 import static org.springframework.util.StringUtils.*;
 
-@Component
+
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
 

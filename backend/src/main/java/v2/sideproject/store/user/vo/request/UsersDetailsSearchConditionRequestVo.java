@@ -36,19 +36,7 @@ public class UsersDetailsSearchConditionRequestVo {
     @Schema(description = "User's department", example = "Sales")
     private String department;
 
-    @NotEmpty(message = "Position cannot be null or empty")
-    @Schema(description = "User's position", example = "Manager")
-    private String position;
-
     @Schema(description = "RoleName associated with the user", example = "2")
     private RolesName roleName;
 
-    @Schema(description = "companyName associated with the user", example = "3")
-    private String companyName;
-
-    @Schema(description = "parentCompany associated with the user", example = "3")
-    private String parentCompany;
-
-    @Schema(description = "address associated with the user", example = "3")
-    private String address;
 }

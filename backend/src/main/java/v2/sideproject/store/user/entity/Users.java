@@ -4,7 +4,8 @@ package v2.sideproject.store.user.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
-import v2.sideproject.store.company.entity.Companies;
+import v2.sideproject.store.user.enums.Gender;
+import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
 
 @Entity
@@ -16,7 +17,7 @@ public class Users extends UsersBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "userId", nullable = false)
     private Long userId;
 
     @Email
@@ -29,28 +30,26 @@ public class Users extends UsersBaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "birth", nullable = false)
+    private String birth;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false)
+    private Gender gender;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private UsersStatus status;
 
-    @Column(name = "department", nullable = false)
-    private String department;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "mobileCarrier", nullable = false)
+    private MobileCarrier mobileCarrier;
 
-    @Column(name = "position", nullable = false)
-    private String position;
-
-    @Column(name = "cellphone", nullable = false)
-    private String cellphone;
-
-    @Column(name = "telephone", nullable = true)
-    private String telephone;
+    @Column(name = "phone", nullable = false)
+    private String phone;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "roleId")
     private Roles roles;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private Companies companies;
 
 }

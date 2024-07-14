@@ -13,14 +13,12 @@ import java.util.*;
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
-    private static final Logger log = LoggerFactory.getLogger(UserDetailsImpl.class);
     private Users users;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + users.getRoles().getName().toString()));
-        log.info("Authorities : {}", authorities);
         return authorities;
     }
 

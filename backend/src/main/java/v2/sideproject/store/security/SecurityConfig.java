@@ -21,6 +21,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import v2.sideproject.store.filter.AuthoritiesLoggingAfterFilter;
 import v2.sideproject.store.filter.AuthoritiesLoggingAtFilter;
 import v2.sideproject.store.filter.JwtAuthenticationFilter;
+import v2.sideproject.store.jwt.JwtTokenProvider;
+import v2.sideproject.store.user.repository.UsersRepository;
+import v2.sideproject.store.user.userDetails.CustomUserDetails;
 
 import java.util.List;
 
@@ -29,7 +32,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final CustomUserDetails customUserDetails;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -49,7 +53,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/auth/**").authenticated())
                 .addFilterAt(new AuthoritiesLoggingAtFilter(),BasicAuthenticationFilter.class)
                 .addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -72,6 +76,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtTokenProvider, customUserDetails);
     }
 
     @Bean

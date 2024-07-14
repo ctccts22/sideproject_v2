@@ -7,7 +7,6 @@ import v2.sideproject.store.user.entity.Users;
 import java.util.Optional;
 
 public interface UsersRepository extends JpaRepository<Users, Long>,UsersRepositoryCustom,QuerydslPredicateExecutor {
-    Optional<Users> findByCellphone(String cellphone);
 
     Optional<Users> findByEmail(String email);
 

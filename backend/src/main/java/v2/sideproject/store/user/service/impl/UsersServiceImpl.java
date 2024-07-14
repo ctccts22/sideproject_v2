@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import v2.sideproject.store.company.entity.Companies;
-import v2.sideproject.store.company.repository.CompaniesRepository;
 import v2.sideproject.store.exception.UsersAlreadyExistsException;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
@@ -27,7 +25,6 @@ import java.util.Optional;
 @Slf4j
 public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
-    private final CompaniesRepository companiesRepository;
     private final PasswordEncoder passwordEncoder;
     private final RolesRepository rolesRepository;
 
@@ -39,44 +36,19 @@ public class UsersServiceImpl implements UsersService {
                 .email(usersDetailsRequestVo.getEmail())
                 .password(passwordEncoder.encode(usersDetailsRequestVo.getPassword()))
                 .name(usersDetailsRequestVo.getName())
-                .status(UsersStatus.DELETED)
-                .department(usersDetailsRequestVo.getDepartment())
-                .position(usersDetailsRequestVo.getPosition())
-                .cellphone(usersDetailsRequestVo.getCellphone())
-                .telephone(usersDetailsRequestVo.getTelephone())
-                .companyName(usersDetailsRequestVo.getCompanyName())
-                .parentCompany(usersDetailsRequestVo.getParentCompany())
-                .address(usersDetailsRequestVo.getAddress())
+                .birth(usersDetailsRequestVo.getBirth())
+                .gender(usersDetailsRequestVo.getGender())
+                .status(UsersStatus.PENDING)
+                .mobileCarrier(usersDetailsRequestVo.getMobileCarrier())
+                .phone(usersDetailsRequestVo.getPhone())
                 .build();
 
-        Optional<Users> optionalUsers = usersRepository.findByCellphone(checkUserVo.getCellphone());
-        if (optionalUsers.isPresent()) {
-            throw new UsersAlreadyExistsException("Users already registered with given phone number");
-        }
-
-        // Check if the company already exists
-        Optional<Companies> existingCompany = companiesRepository.findByName(checkUserVo.getCompanyName());
-        Companies savedCompany;
-        if (existingCompany.isPresent()) {
-            savedCompany = existingCompany.get();
-        } else {
-            Companies companies = Companies.builder()
-                    .name(checkUserVo.getCompanyName())
-                    .address(checkUserVo.getAddress())
-                    .build();
-            try {
-                savedCompany = companiesRepository.save(companies);
-            } catch (Exception e) {
-                log.error("Saved companies error", e);
-                throw e;
-            }
-        }
-
-        Roles roles = rolesRepository.findByName(RolesName.PENDING) // default value
+        Roles roles = rolesRepository.findByName(RolesName.CUSTOMER) // default value
                 .orElseThrow(() -> new IllegalStateException("Default role not found"));
 
 
-        Users users = UsersMapper.mapToUsersDetailsResponseVo(checkUserVo, roles, savedCompany);
+        Users users = UsersMapper.mapToUsersDetailsResponseVo(checkUserVo, roles);
+        log.info("user : {} ", users.toString());
 
         usersRepository.save(users);
     }
