@@ -7,11 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.Gender;
@@ -20,7 +18,6 @@ import v2.sideproject.store.user.enums.RolesName;
 import v2.sideproject.store.user.enums.UsersStatus;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
-import v2.sideproject.store.user.vo.request.UsersDetailsSearchConditionRequestVo;
 
 import java.util.UUID;
 
@@ -41,7 +38,6 @@ public class UsersRepositoryTest {
 
     private Roles roles;
 
-    private UsersDetailsSearchConditionRequestVo usersDetailsSearchConditionRequestVo;
 
     @BeforeEach
     void setup() {

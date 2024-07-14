@@ -17,10 +17,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.user.constants.AuthConstants;
-import v2.sideproject.store.user.vo.request.UsersLoginRequestVo;
+import v2.sideproject.store.user.dto.request.UsersLoginRequestDto;
 import v2.sideproject.store.user.service.AuthService;
-import v2.sideproject.store.user.vo.response.UsersInfoResponseVo;
-import v2.sideproject.store.user.vo.response.UsersStatusResponseVo;
+import v2.sideproject.store.user.dto.response.UsersInfoResponseDto;
+import v2.sideproject.store.user.dto.response.UsersStatusResponseDto;
 
 
 @RequestMapping(path = "/api/auth", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -60,12 +60,12 @@ public class AuthController {
     }
     )
     @PostMapping(path = "/login")
-    public ResponseEntity<UsersStatusResponseVo> Login(@RequestBody UsersLoginRequestVo usersLoginRequestVo,
-                                                       HttpServletResponse response) throws BadRequestException {
-        authService.login(usersLoginRequestVo, response);
+    public ResponseEntity<UsersStatusResponseDto> Login(@RequestBody UsersLoginRequestDto usersLoginRequestDto,
+                                                        HttpServletResponse response) throws BadRequestException {
+        authService.login(usersLoginRequestDto, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new UsersStatusResponseVo(AuthConstants.STATUS_200, AuthConstants.MESSAGE_Login_200));
+                .body(new UsersStatusResponseDto(AuthConstants.STATUS_200, AuthConstants.MESSAGE_Login_200));
     }
 
     @Operation(
@@ -88,13 +88,13 @@ public class AuthController {
     }
     )
     @PostMapping(path ="/logout")
-    public ResponseEntity<UsersStatusResponseVo> Logout(
+    public ResponseEntity<UsersStatusResponseDto> Logout(
             HttpServletResponse response,
             HttpServletRequest request) {
         authService.logout(request, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new UsersStatusResponseVo(AuthConstants.STATUS_200, AuthConstants.MESSAGE_Logout_200));
+                .body(new UsersStatusResponseDto(AuthConstants.STATUS_200, AuthConstants.MESSAGE_Logout_200));
     }
 
     @Operation(
@@ -117,19 +117,19 @@ public class AuthController {
 
     })
     @GetMapping(path ="/accessToken")
-    public ResponseEntity<UsersStatusResponseVo> getAccessToken(
+    public ResponseEntity<UsersStatusResponseDto> getAccessToken(
             HttpServletRequest request,
             HttpServletResponse response
     ) {
         authService.getAccessToken(request, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new UsersStatusResponseVo(AuthConstants.STATUS_200, AuthConstants.MESSAGE_TOKEN_200));
+                .body(new UsersStatusResponseDto(AuthConstants.STATUS_200, AuthConstants.MESSAGE_TOKEN_200));
     }
 
     @Operation(
             summary = "Response email and role to frontend Rest API",
-            description = "This API can avoid to use local storage to save usersInfo. Any frontend lib&framework just utilize this API" +
+            description = "This API can aDtoid to use local storage to save usersInfo. Any frontend lib&framework just utilize this API" +
                     "to use navigation guard(In order to protect get into the page against unknown users"
     )
     @ApiResponses({
@@ -147,10 +147,10 @@ public class AuthController {
 
     })
     @GetMapping(path ="/usersInfo")
-    public ResponseEntity<UsersInfoResponseVo> getUserInfo() {
-        UsersInfoResponseVo usersInfoResponseVo = authService.getUserInfo();
+    public ResponseEntity<UsersInfoResponseDto> getUserInfo() {
+        UsersInfoResponseDto usersInfoResponseDto = authService.getUserInfo();
         return ResponseEntity.status(HttpStatus.OK)
-                .body(usersInfoResponseVo);
+                .body(usersInfoResponseDto);
     }
 
 }

@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.vo.request;
+package v2.sideproject.store.user.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UsersLoginRequestVo {
+public class UsersLoginRequestDto {
     @Email
     @NotEmpty(message = "Email cannot be null or empty")
     @Schema(description = "Email is used for login", example = "test@test.com")

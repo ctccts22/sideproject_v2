@@ -10,9 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import v2.sideproject.store.exception.UsersAlreadyExistsException;
+import v2.sideproject.store.user.dto.request.AddressesRequestDto;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.Gender;
@@ -23,7 +22,8 @@ import v2.sideproject.store.user.mapper.UsersMapper;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
-import v2.sideproject.store.user.vo.request.UsersDetailsRequestVo;
+import v2.sideproject.store.user.dto.request.UsersDetailsRequestDto;
+import v2.sideproject.store.user.dto.response.UsersDetailsResponseDto;
 
 import java.util.Optional;
 
@@ -48,34 +48,50 @@ public class UsersServiceTest {
     private UsersServiceImpl usersService;
 
     private Users users;
-    private UsersDetailsRequestVo usersDetailsRequestVo;
+    private UsersDetailsRequestDto usersDetailsRequestDto;
+    private AddressesRequestDto addressesRequestDto;
     private Roles roles;
 
     @BeforeEach
     void setup() {
-        roles = Roles.builder()
-                .roleId("1")
-                .name(RolesName.CUSTOMER)
-                .build();
-        users = Users.builder()
+        usersDetailsRequestDto = UsersDetailsRequestDto.builder()
                 .email("testForJunit@test.com")
-                .password(passwordEncoder.encode("test"))
+                .password("test")
+                .checkPassword("test")
                 .name("홍길동")
                 .birth("950315")
                 .gender(Gender.MALE)
                 .status(UsersStatus.APPROVED)
                 .mobileCarrier(MobileCarrier.KT)
                 .phone("000-0000-0000")
-                .roles(roles)
                 .build();
-        // UserDto for using service layer
-        usersDetailsRequestVo = UsersMapper.mapFromUsersDetailsRequestVoToUsers(users);
-
+        addressesRequestDto = AddressesRequestDto.builder()
+                .mainAddress("관악구 봉천동")
+                .subAddress("303호")
+                .zipCode("90045")
+                .phone("000-000-0000")
+                .build();
+        roles = Roles.builder()
+                .roleId("3")
+                .name(RolesName.CUSTOMER)
+                .build();
     }
 
     @DisplayName("JUnit test for saveUsers method")
     @Test
     void givenSavedUser_whenOccurCreateService_thenReturnValue() {
+        var usersDetailsResponseDto = UsersDetailsResponseDto.builder()
+                .email(usersDetailsRequestDto.getEmail())
+                .password(usersDetailsRequestDto.getPassword())
+                .name(usersDetailsRequestDto.getName())
+                .birth(usersDetailsRequestDto.getBirth())
+                .gender(usersDetailsRequestDto.getGender())
+                .status(usersDetailsRequestDto.getStatus())
+                .mobileCarrier(usersDetailsRequestDto.getMobileCarrier())
+                .phone(usersDetailsRequestDto.getPhone())
+                .build();
+
+        users = UsersMapper.mapToUsersDetailsResponseDto(usersDetailsResponseDto, roles);
 
         // given
         given(rolesRepository.findByName(RolesName.CUSTOMER))
@@ -85,23 +101,9 @@ public class UsersServiceTest {
                 .willReturn(users);
 
         // when
-        usersService.createUsers(usersDetailsRequestVo);
+        usersService.createUsers(usersDetailsRequestDto, addressesRequestDto);
 
         // then
         verify(usersRepository, times(1)).save(any(Users.class));
     }
-
-//    @DisplayName("JUnit test for createUsers method when user already exists")
-//    @Test
-//    void givenExistingUser_whenCreateUsers_thenThrowException() {
-//        // given
-//        given(usersRepository.findByCellphone(usersDetailsRequestVo.getCellphone()))
-//                .willReturn(Optional.of(users));
-//
-//        // when & then
-//        assertThrows(UsersAlreadyExistsException.class, () -> usersService.createUsers(usersDetailsRequestVo));
-//
-//        verify(usersRepository, times(1)).findByCellphone(usersDetailsRequestVo.getCellphone());
-//        verify(usersRepository, never()).save(any(Users.class));
-//    }
 }

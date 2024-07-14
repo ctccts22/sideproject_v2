@@ -8,6 +8,9 @@ import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -52,4 +55,6 @@ public class Users extends UsersBaseEntity {
     @JoinColumn(name = "roleId")
     private Roles roles;
 
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Addresses> addressesSet = new HashSet<>();
 }

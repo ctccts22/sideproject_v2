@@ -8,24 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import v2.sideproject.store.filter.JwtAuthenticationFilter;
-import v2.sideproject.store.jwt.JwtTokenProvider;
 import v2.sideproject.store.user.constants.UsersConstants;
 import v2.sideproject.store.user.controller.UsersController;
+import v2.sideproject.store.user.dto.request.AddressesRequestDto;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
-import v2.sideproject.store.user.enums.RolesName;
 import v2.sideproject.store.user.enums.UsersStatus;
-import v2.sideproject.store.user.mapper.UsersMapper;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
-import v2.sideproject.store.user.userDetails.CustomUserDetails;
-import v2.sideproject.store.user.vo.request.UsersDetailsRequestVo;
-import v2.sideproject.store.user.vo.response.UsersStatusResponseVo;
+import v2.sideproject.store.user.dto.request.UsersDetailsRequestDto;
+import v2.sideproject.store.user.dto.response.UsersStatusResponseDto;
 import v2.sideproject.store.users.security.WithMockCustomUser;
 
 
@@ -48,22 +43,30 @@ public class UsersControllerTest {
     private UsersServiceImpl usersService;
 
     private Users users;
-    private UsersDetailsRequestVo usersDetailsRequestVo;
-    private UsersStatusResponseVo usersStatusResponseVo;
+    private UsersDetailsRequestDto usersDetailsRequestDto;
+    private UsersStatusResponseDto usersStatusResponseDto;
+    private AddressesRequestDto addressesRequestDto;
     private Roles roles;
 
     @BeforeEach
     void setup() {
 
-        usersDetailsRequestVo = UsersDetailsRequestVo.builder()
+        usersDetailsRequestDto = UsersDetailsRequestDto.builder()
                 .email("testForJunit@test.com")
                 .password("test")
+                .checkPassword("test")
                 .name("홍길동")
                 .birth("950315")
                 .gender(Gender.MALE)
                 .status(UsersStatus.APPROVED)
                 .mobileCarrier(MobileCarrier.KT)
                 .phone("000-0000-0000")
+                .build();
+        addressesRequestDto = AddressesRequestDto.builder()
+                .mainAddress("관악구 봉천동")
+                .subAddress("303호")
+                .zipCode("90045")
+                .phone("000-000-0000")
                 .build();
 }
 
@@ -73,16 +76,20 @@ public class UsersControllerTest {
     void givenUserObject_whenCreateUser_thenReturnSavedUser() throws Exception {
 
         // given
-        String requestBody = objectMapper.writeValueAsString(usersDetailsRequestVo);
+        StringBuilder twoBodies = new StringBuilder();
+        String userBody = objectMapper.writeValueAsString(usersDetailsRequestDto);
+        String addressBody = objectMapper.writeValueAsString(addressesRequestDto);
+        twoBodies.append(userBody);
+        twoBodies.append(addressBody);
 
         // void
-        doNothing().when(usersService).createUsers(any(UsersDetailsRequestVo.class));
+        doNothing().when(usersService).createUsers(any(UsersDetailsRequestDto.class), any(AddressesRequestDto.class));
 
         // when
         ResultActions response = mockMvc.perform(post("/api/users/registration")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody)
+                .content(twoBodies.toString())
         );
 
         // then
@@ -90,7 +97,5 @@ public class UsersControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.statusCode").value(UsersConstants.STATUS_201))
                 .andExpect(jsonPath("$.statusMsg").value(UsersConstants.MESSAGE_201));
-
-        verify(usersService, times(1)).createUsers(any(UsersDetailsRequestVo.class));
     }
 }

@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.vo.response;
+package v2.sideproject.store.user.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Data;
 )
 @Data
 @AllArgsConstructor
-public class UsersStatusResponseVo {
+public class UsersStatusResponseDto {
 
     @Schema(
             description = "Status code in the response"

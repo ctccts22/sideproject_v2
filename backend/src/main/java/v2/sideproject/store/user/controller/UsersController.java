@@ -16,9 +16,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.error.ErrorResponseDto;
 import v2.sideproject.store.user.constants.UsersConstants;
-import v2.sideproject.store.user.vo.request.UsersDetailsRequestVo;
-import v2.sideproject.store.user.vo.response.UsersDetailsResponseVo;
-import v2.sideproject.store.user.vo.response.UsersStatusResponseVo;
+import v2.sideproject.store.user.dto.request.AddressesRequestDto;
+import v2.sideproject.store.user.dto.request.UsersDetailsRequestDto;
+import v2.sideproject.store.user.dto.response.UsersDetailsResponseDto;
+import v2.sideproject.store.user.dto.response.UsersStatusResponseDto;
 import v2.sideproject.store.user.service.UsersService;
 
 @Tag(
@@ -50,11 +51,11 @@ public class UsersController {
             )
     })
     @GetMapping(path = "/fetchAll")
-    public ResponseEntity<Page<UsersDetailsResponseVo>> fetchAllUsersDetails() {
-        Page<UsersDetailsResponseVo> usersDetailsResponseVo = usersService.fetchAllUsersDetails();
+    public ResponseEntity<Page<UsersDetailsResponseDto>> fetchAllUsersDetails() {
+        Page<UsersDetailsResponseDto> usersDetailsResponseDto = usersService.fetchAllUsersDetails();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usersDetailsResponseVo);
+                .body(usersDetailsResponseDto);
     }
 
     @Operation(
@@ -76,10 +77,11 @@ public class UsersController {
     }
     )
     @PostMapping(path = "/registration")
-    public ResponseEntity<UsersStatusResponseVo> createUsers(@Valid @RequestBody UsersDetailsRequestVo usersDetailsRequestVo) {
-        usersService.createUsers(usersDetailsRequestVo);
+    public ResponseEntity<UsersStatusResponseDto> createUsers(@Valid
+                                                                 @RequestBody UsersDetailsRequestDto usersDetailsRequestDto, AddressesRequestDto addressRequestDto) {
+        usersService.createUsers(usersDetailsRequestDto, addressRequestDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new UsersStatusResponseVo(UsersConstants.STATUS_201, UsersConstants.MESSAGE_201));
+                .body(new UsersStatusResponseDto(UsersConstants.STATUS_201, UsersConstants.MESSAGE_201));
     }
 }
