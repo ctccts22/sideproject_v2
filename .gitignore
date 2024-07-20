@@ -7,3 +7,4 @@
 ### application ###
 /backend/**/application.properties
 /backend/**/application.yml
+/frontend/node_modules/
