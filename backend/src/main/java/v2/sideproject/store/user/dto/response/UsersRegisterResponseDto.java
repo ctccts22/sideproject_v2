@@ -19,7 +19,7 @@ import v2.sideproject.store.user.enums.UsersStatus;
 @Data
 @AllArgsConstructor
 @Builder
-public class UsersDetailsResponseDto {
+public class UsersRegisterResponseDto {
 
     @Email
     @NotEmpty(message = "Email cannot be null or empty")

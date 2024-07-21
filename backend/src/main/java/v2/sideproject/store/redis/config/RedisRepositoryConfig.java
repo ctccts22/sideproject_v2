@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -32,10 +33,10 @@ public class RedisRepositoryConfig {
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-       RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-       config.setHostName(host);
-       config.setPort(port);
-       return new LettuceConnectionFactory(config);
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(host);
+        config.setPort(port);
+        return new LettuceConnectionFactory(config);
 
     }
 
@@ -64,11 +65,23 @@ public class RedisRepositoryConfig {
 
     private static Map<String, RedisCacheConfiguration> getStringRedisCacheConfigurationMap(RedisCacheConfiguration redisCacheConfiguration) {
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
-        cacheConfigurations.put("getListNamesAndData", redisCacheConfiguration.entryTtl(Duration.ofHours(1)));
-        cacheConfigurations.put("getListNames", redisCacheConfiguration.entryTtl(Duration.ofHours(1)));
+        cacheConfigurations.put("fetchAllUserByParams", redisCacheConfiguration.entryTtl(Duration.ofHours(1)));
 
         return cacheConfigurations;
     }
 
+    @Bean
+    public KeyGenerator customKeyGenerator() {
+        return (target, method, params) -> {
+            StringBuilder key = new StringBuilder();
+            key.append(target.getClass().getSimpleName()).append(".");
+            key.append(method.getName());
+            for (Object param : params) {
+                key.append(".").append(param.toString());
+            }
+            return key.toString();
+        };
 
+
+    }
 }

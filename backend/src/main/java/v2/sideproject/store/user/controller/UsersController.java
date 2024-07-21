@@ -9,18 +9,19 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.error.ErrorResponseDto;
+import v2.sideproject.store.redis.config.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
-import v2.sideproject.store.user.dto.request.AddressesRequestDto;
-import v2.sideproject.store.user.dto.request.UsersDetailsRequestDto;
-import v2.sideproject.store.user.dto.response.UsersDetailsResponseDto;
+import v2.sideproject.store.user.dto.request.UsersRegisterRequestDto;
+import v2.sideproject.store.user.dto.response.UsersRegisterResponseDto;
 import v2.sideproject.store.user.dto.response.UsersStatusResponseDto;
+import v2.sideproject.store.user.dto.search.UsersSearchParamsDto;
 import v2.sideproject.store.user.service.UsersService;
 
 @Tag(
@@ -53,8 +54,10 @@ public class UsersController {
             )
     })
     @GetMapping(path = "/fetchAll")
-    public ResponseEntity<Page<UsersDetailsResponseDto>> fetchAllUsersDetails() {
-        Page<UsersDetailsResponseDto> usersDetailsResponseDto = usersService.fetchAllUsersDetails();
+    public ResponseEntity<RestPage<UsersRegisterResponseDto>> fetchAllUsersDetails(
+            @ModelAttribute UsersSearchParamsDto usersSearchParamsDto,
+                                                                                  Pageable pageable) {
+        RestPage<UsersRegisterResponseDto> usersDetailsResponseDto = usersService.fetchAllUsersDetails(usersSearchParamsDto, pageable);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usersDetailsResponseDto);
@@ -81,8 +84,8 @@ public class UsersController {
     )
     @PostMapping(path = "/registration")
     public ResponseEntity<UsersStatusResponseDto> createUsers(@Valid
-                                                                 @RequestBody UsersDetailsRequestDto usersDetailsRequestDto) {
-        usersService.createUsers(usersDetailsRequestDto);
+                                                                 @RequestBody UsersRegisterRequestDto usersRegisterRequestDto) {
+        usersService.createUsers(usersRegisterRequestDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new UsersStatusResponseDto(UsersConstants.STATUS_201, UsersConstants.MESSAGE_201));

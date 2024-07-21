@@ -6,13 +6,10 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
-
-import java.util.List;
 
 @Schema(
         name = "UsersDetailsRequest",
@@ -21,7 +18,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-public class UsersDetailsRequestDto {
+public class UsersRegisterRequestDto {
 
     @Email
     @NotEmpty(message = "Email cannot be null or empty")

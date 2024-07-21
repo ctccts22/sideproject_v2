@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import v2.sideproject.store.user.dto.request.AddressesRequestDto;
+import v2.sideproject.store.user.dto.response.UsersRegisterResponseDto;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.Gender;
@@ -22,8 +23,7 @@ import v2.sideproject.store.user.mapper.UsersMapper;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
-import v2.sideproject.store.user.dto.request.UsersDetailsRequestDto;
-import v2.sideproject.store.user.dto.response.UsersDetailsResponseDto;
+import v2.sideproject.store.user.dto.request.UsersRegisterRequestDto;
 
 import java.util.Optional;
 
@@ -48,7 +48,7 @@ public class UsersServiceTest {
     private UsersServiceImpl usersService;
 
     private Users users;
-    private UsersDetailsRequestDto usersDetailsRequestDto;
+    private UsersRegisterRequestDto usersRegisterRequestDto;
     private AddressesRequestDto addressesRequestDto;
     private Roles roles;
 
@@ -60,7 +60,7 @@ public class UsersServiceTest {
                 .zipCode("90045")
                 .phone("000-000-0000")
                 .build();
-        usersDetailsRequestDto = UsersDetailsRequestDto.builder()
+        usersRegisterRequestDto = UsersRegisterRequestDto.builder()
                 .email("testForJunit@test.com")
                 .password("test")
                 .checkPassword("test")
@@ -81,15 +81,15 @@ public class UsersServiceTest {
     @DisplayName("JUnit test for saveUsers method")
     @Test
     void givenSavedUser_whenOccurCreateService_thenReturnValue() {
-        var usersDetailsResponseDto = UsersDetailsResponseDto.builder()
-                .email(usersDetailsRequestDto.getEmail())
-                .password(usersDetailsRequestDto.getPassword())
-                .name(usersDetailsRequestDto.getName())
-                .birth(usersDetailsRequestDto.getBirth())
-                .gender(usersDetailsRequestDto.getGender())
-                .status(usersDetailsRequestDto.getStatus())
-                .mobileCarrier(usersDetailsRequestDto.getMobileCarrier())
-                .phone(usersDetailsRequestDto.getPhone())
+        var usersDetailsResponseDto = UsersRegisterResponseDto.builder()
+                .email(usersRegisterRequestDto.getEmail())
+                .password(usersRegisterRequestDto.getPassword())
+                .name(usersRegisterRequestDto.getName())
+                .birth(usersRegisterRequestDto.getBirth())
+                .gender(usersRegisterRequestDto.getGender())
+                .status(usersRegisterRequestDto.getStatus())
+                .mobileCarrier(usersRegisterRequestDto.getMobileCarrier())
+                .phone(usersRegisterRequestDto.getPhone())
                 .build();
 
         users = UsersMapper.mapToUsersDetailsResponseDto(usersDetailsResponseDto, roles);
@@ -102,7 +102,7 @@ public class UsersServiceTest {
                 .willReturn(users);
 
         // when
-        usersService.createUsers(usersDetailsRequestDto);
+        usersService.createUsers(usersRegisterRequestDto);
 
         // then
         verify(usersRepository, times(1)).save(any(Users.class));

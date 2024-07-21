@@ -19,7 +19,7 @@ import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
-import v2.sideproject.store.user.dto.request.UsersDetailsRequestDto;
+import v2.sideproject.store.user.dto.request.UsersRegisterRequestDto;
 import v2.sideproject.store.user.dto.response.UsersStatusResponseDto;
 import v2.sideproject.store.users.security.WithMockCustomUser;
 
@@ -43,7 +43,7 @@ public class UsersControllerTest {
     private UsersServiceImpl usersService;
 
     private Users users;
-    private UsersDetailsRequestDto usersDetailsRequestDto;
+    private UsersRegisterRequestDto usersRegisterRequestDto;
     private UsersStatusResponseDto usersStatusResponseDto;
     private AddressesRequestDto addressesRequestDto;
     private Roles roles;
@@ -56,7 +56,7 @@ public class UsersControllerTest {
                 .zipCode("90045")
                 .phone("000-000-0000")
                 .build();
-        usersDetailsRequestDto = UsersDetailsRequestDto.builder()
+        usersRegisterRequestDto = UsersRegisterRequestDto.builder()
                 .email("testForJunit@test.com")
                 .password("test")
                 .checkPassword("test")
@@ -76,10 +76,10 @@ public class UsersControllerTest {
     void givenUserObject_whenCreateUser_thenReturnSavedUser() throws Exception {
 
         // given
-        String userBody = objectMapper.writeValueAsString(usersDetailsRequestDto);
+        String userBody = objectMapper.writeValueAsString(usersRegisterRequestDto);
 
         // void
-        doNothing().when(usersService).createUsers(any(UsersDetailsRequestDto.class));
+        doNothing().when(usersService).createUsers(any(UsersRegisterRequestDto.class));
 
         // when
         ResultActions response = mockMvc.perform(post("/api/users/registration")
