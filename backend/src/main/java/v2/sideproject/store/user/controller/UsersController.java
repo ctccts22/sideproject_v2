@@ -81,9 +81,8 @@ public class UsersController {
     )
     @PostMapping(path = "/registration")
     public ResponseEntity<UsersStatusResponseDto> createUsers(@Valid
-                                                                 @RequestBody UsersDetailsRequestDto usersDetailsRequestDto,
-                                                              AddressesRequestDto addressRequestDto) {
-        usersService.createUsers(usersDetailsRequestDto, addressRequestDto);
+                                                                 @RequestBody UsersDetailsRequestDto usersDetailsRequestDto) {
+        usersService.createUsers(usersDetailsRequestDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new UsersStatusResponseDto(UsersConstants.STATUS_201, UsersConstants.MESSAGE_201));

@@ -12,6 +12,8 @@ import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
 
+import java.util.List;
+
 @Schema(
         name = "UsersDetailsRequest",
         description = "Schema to hold successful response Users Detail information"
@@ -57,4 +59,8 @@ public class UsersDetailsRequestDto {
     @NotEmpty(message = "Cellphone number cannot be null or empty")
     @Schema(description = "User's phone number", example = "123-456-7890")
     private String phone;
+
+    @NotNull(message = "Address cannot be null")
+    @Schema(description = "User's address")
+    private AddressesRequestDto address;
 }

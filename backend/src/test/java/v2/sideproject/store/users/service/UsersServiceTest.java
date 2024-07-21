@@ -54,6 +54,12 @@ public class UsersServiceTest {
 
     @BeforeEach
     void setup() {
+        addressesRequestDto = AddressesRequestDto.builder()
+                .mainAddress("관악구 봉천동")
+                .subAddress("303호")
+                .zipCode("90045")
+                .phone("000-000-0000")
+                .build();
         usersDetailsRequestDto = UsersDetailsRequestDto.builder()
                 .email("testForJunit@test.com")
                 .password("test")
@@ -64,12 +70,7 @@ public class UsersServiceTest {
                 .status(UsersStatus.APPROVED)
                 .mobileCarrier(MobileCarrier.KT)
                 .phone("000-0000-0000")
-                .build();
-        addressesRequestDto = AddressesRequestDto.builder()
-                .mainAddress("관악구 봉천동")
-                .subAddress("303호")
-                .zipCode("90045")
-                .phone("000-000-0000")
+                .address(addressesRequestDto)
                 .build();
         roles = Roles.builder()
                 .roleId("3")
@@ -101,7 +102,7 @@ public class UsersServiceTest {
                 .willReturn(users);
 
         // when
-        usersService.createUsers(usersDetailsRequestDto, addressesRequestDto);
+        usersService.createUsers(usersDetailsRequestDto);
 
         // then
         verify(usersRepository, times(1)).save(any(Users.class));

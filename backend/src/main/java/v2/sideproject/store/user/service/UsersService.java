@@ -6,7 +6,7 @@ import v2.sideproject.store.user.dto.request.UsersDetailsRequestDto;
 import v2.sideproject.store.user.dto.response.UsersDetailsResponseDto;
 
 public interface UsersService {
-    void createUsers(UsersDetailsRequestDto usersDetailsRequestDto, AddressesRequestDto addressRequestDto);
+    void createUsers(UsersDetailsRequestDto usersDetailsRequestDto);
 
     Page<UsersDetailsResponseDto> fetchAllUsersDetails();
 

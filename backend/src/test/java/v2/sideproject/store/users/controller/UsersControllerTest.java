@@ -50,7 +50,12 @@ public class UsersControllerTest {
 
     @BeforeEach
     void setup() {
-
+        addressesRequestDto = AddressesRequestDto.builder()
+                .mainAddress("관악구 봉천동")
+                .subAddress("303호")
+                .zipCode("90045")
+                .phone("000-000-0000")
+                .build();
         usersDetailsRequestDto = UsersDetailsRequestDto.builder()
                 .email("testForJunit@test.com")
                 .password("test")
@@ -61,12 +66,7 @@ public class UsersControllerTest {
                 .status(UsersStatus.APPROVED)
                 .mobileCarrier(MobileCarrier.KT)
                 .phone("000-0000-0000")
-                .build();
-        addressesRequestDto = AddressesRequestDto.builder()
-                .mainAddress("관악구 봉천동")
-                .subAddress("303호")
-                .zipCode("90045")
-                .phone("000-000-0000")
+                .address(addressesRequestDto)
                 .build();
 }
 
@@ -76,20 +76,16 @@ public class UsersControllerTest {
     void givenUserObject_whenCreateUser_thenReturnSavedUser() throws Exception {
 
         // given
-        StringBuilder twoBodies = new StringBuilder();
         String userBody = objectMapper.writeValueAsString(usersDetailsRequestDto);
-        String addressBody = objectMapper.writeValueAsString(addressesRequestDto);
-        twoBodies.append(userBody);
-        twoBodies.append(addressBody);
 
         // void
-        doNothing().when(usersService).createUsers(any(UsersDetailsRequestDto.class), any(AddressesRequestDto.class));
+        doNothing().when(usersService).createUsers(any(UsersDetailsRequestDto.class));
 
         // when
         ResultActions response = mockMvc.perform(post("/api/users/registration")
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(twoBodies.toString())
+                .content(userBody)
         );
 
         // then

@@ -34,7 +34,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     @Transactional
-    public void createUsers(UsersDetailsRequestDto usersDetailsRequestDto, AddressesRequestDto addressRequestDto) {
+    public void createUsers(UsersDetailsRequestDto usersDetailsRequestDto) {
         checkPassword(usersDetailsRequestDto);
         checkDuplicatedEmail(usersDetailsRequestDto);
         // response
@@ -60,10 +60,10 @@ public class UsersServiceImpl implements UsersService {
 
         AddressesResponseDto addressesResponseDto = AddressesResponseDto.builder()
                 .userId(savedUsers.getUserId())
-                .mainAddress(addressRequestDto.getMainAddress())
-                .subAddress(addressRequestDto.getSubAddress())
-                .zipCode(addressRequestDto.getZipCode())
-                .phone(addressRequestDto.getPhone())
+                .mainAddress(usersDetailsRequestDto.getAddress().getMainAddress())
+                .subAddress(usersDetailsRequestDto.getAddress().getSubAddress())
+                .zipCode(usersDetailsRequestDto.getAddress().getZipCode())
+                .phone(usersDetailsRequestDto.getAddress().getPhone())
                 .build();
 
         AddressesMapper.mapToAddresses(addressesResponseDto);
