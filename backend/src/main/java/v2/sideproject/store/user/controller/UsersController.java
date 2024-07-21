@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,8 @@ public class UsersController {
 
     @Operation(
             summary = "Fetch Users Details RestAPI",
-            description = "Rest API to fetch Users"
+            description = "Rest API to fetch Users",
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses({
             @ApiResponse(
@@ -60,7 +62,8 @@ public class UsersController {
 
     @Operation(
             summary = "Create User REST API",
-            description = "REST API to create new User"
+            description = "REST API to create new User",
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @ApiResponses({
             @ApiResponse(
@@ -78,7 +81,8 @@ public class UsersController {
     )
     @PostMapping(path = "/registration")
     public ResponseEntity<UsersStatusResponseDto> createUsers(@Valid
-                                                                 @RequestBody UsersDetailsRequestDto usersDetailsRequestDto, AddressesRequestDto addressRequestDto) {
+                                                                 @RequestBody UsersDetailsRequestDto usersDetailsRequestDto,
+                                                              AddressesRequestDto addressRequestDto) {
         usersService.createUsers(usersDetailsRequestDto, addressRequestDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)

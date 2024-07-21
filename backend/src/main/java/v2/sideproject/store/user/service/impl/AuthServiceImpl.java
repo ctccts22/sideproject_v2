@@ -48,8 +48,8 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException(AuthConstants.MESSAGE_404));
 
         Authentication authentication;
-        try{
-            authentication =  authenticationManager.authenticate(
+        try {
+            authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(usersLoginRequestDto.getEmail(), usersLoginRequestDto.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -61,11 +61,10 @@ public class AuthServiceImpl implements AuthService {
             jwtTokenProvider.createRefreshTokenCookie(response, "refreshToken", refreshToken, maxAgeForCookie);
 
 
-        }catch(BadCredentialsException e){
+        } catch (BadCredentialsException e) {
             throw new BadCredentialsException(AuthConstants.MESSAGE_401);
         }
     }
-
 
 
     @Override

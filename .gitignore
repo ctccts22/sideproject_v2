@@ -8,3 +8,4 @@
 /backend/**/application.properties
 /backend/**/application.yml
 /frontend/node_modules/
+/infra/docker-compose.yaml
