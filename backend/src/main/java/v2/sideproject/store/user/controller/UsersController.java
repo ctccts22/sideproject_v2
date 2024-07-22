@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.error.ErrorResponseDto;
 import v2.sideproject.store.redis.config.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
+import v2.sideproject.store.user.models.condition.UsersOrderCondition;
 import v2.sideproject.store.user.models.request.UsersRegisterRequest;
 import v2.sideproject.store.user.models.response.UsersDetailsResponse;
-import v2.sideproject.store.user.models.response.UsersRegisterResponse;
 import v2.sideproject.store.user.models.response.UsersStatusResponse;
-import v2.sideproject.store.user.models.search.UsersSearchParamsDto;
+import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.service.UsersService;
 
 @Tag(
@@ -57,8 +57,10 @@ public class UsersController {
     @GetMapping(path = "/fetchAll")
     public ResponseEntity<RestPage<UsersDetailsResponse>> fetchAllUsersDetails(
             @ModelAttribute UsersSearchParamsDto usersSearchParamsDto,
-                                                                                  Pageable pageable) {
-        RestPage<UsersDetailsResponse> usersDetailsResponseDto = usersService.fetchAllUsersDetails(usersSearchParamsDto, pageable);
+                                                                                  Pageable pageable,
+            UsersOrderCondition usersOrderCondition
+    ) {
+        RestPage<UsersDetailsResponse> usersDetailsResponseDto = usersService.fetchAllUsersDetails(usersSearchParamsDto, pageable, usersOrderCondition);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usersDetailsResponseDto);

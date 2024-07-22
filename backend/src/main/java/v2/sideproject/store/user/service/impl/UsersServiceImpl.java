@@ -12,11 +12,12 @@ import v2.sideproject.store.exception.PasswordMismatchException;
 import v2.sideproject.store.exception.UsersAlreadyExistsException;
 import v2.sideproject.store.redis.config.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
+import v2.sideproject.store.user.models.condition.UsersOrderCondition;
 import v2.sideproject.store.user.models.dto.UsersDto;
 import v2.sideproject.store.user.models.response.AddressesResponse;
 import v2.sideproject.store.user.models.response.UsersDetailsResponse;
 import v2.sideproject.store.user.models.response.UsersRegisterResponse;
-import v2.sideproject.store.user.models.search.UsersSearchParamsDto;
+import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.RolesName;
 import v2.sideproject.store.user.enums.UsersStatus;
@@ -76,9 +77,9 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     @Cacheable(value = "fetchAllUserByParams", keyGenerator = "customKeyGenerator")
-    public RestPage<UsersDetailsResponse> fetchAllUsersDetails(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable) {
+    public RestPage<UsersDetailsResponse> fetchAllUsersDetails(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable, UsersOrderCondition usersOrderCondition) {
 
-        Page<UsersDto> usersDetailsByParams = usersRepository.findAllUsersDetailsByParams(usersSearchParamsDto, pageable);
+        Page<UsersDto> usersDetailsByParams = usersRepository.findAllUsersDetailsByParams(usersSearchParamsDto, pageable, usersOrderCondition);
 
         // mapping
         return new RestPage<>(null);

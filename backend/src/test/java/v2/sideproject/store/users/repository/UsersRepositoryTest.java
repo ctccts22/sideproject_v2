@@ -1,5 +1,6 @@
 package v2.sideproject.store.users.repository;
 
+import com.querydsl.core.types.Order;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +15,8 @@ import v2.sideproject.store.user.entity.Addresses;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.*;
-import v2.sideproject.store.user.models.request.AddressesRequest;
+import v2.sideproject.store.user.models.condition.UsersOrderCondition;
+import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.repository.AddressesRepository;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
@@ -71,7 +73,7 @@ public class UsersRepositoryTest {
 
         Users savedUsers = usersRepository.save(checkUser);
 
-        var addresses = Addresses.builder()
+        var addresses1 = Addresses.builder()
                 .mainAddress("관악구 봉천동")
                 .subAddress("303호")
                 .zipCode("90045")
@@ -79,7 +81,16 @@ public class UsersRepositoryTest {
                 .addressesType(AddressesType.HOME)
                 .users(savedUsers)
                 .build();
-        addressesRepository.save(addresses);
+        var addresses2 = Addresses.builder()
+                .mainAddress("관악구 봉천동")
+                .subAddress("303호")
+                .zipCode("90045")
+                .phone("000-000-0000")
+                .addressesType(AddressesType.HOME)
+                .users(savedUsers)
+                .build();
+        addressesRepository.save(addresses1);
+        addressesRepository.save(addresses2);
         System.out.println("checkUser " + checkUser);
 
         assertThat(savedUsers).isNotNull();
@@ -87,9 +98,11 @@ public class UsersRepositoryTest {
 
     @DisplayName("Junit test for select users operation")
     @Test
-    @Transactional
     void givenPageableAndSearchCondition_whenFindDetails_thenReturnQueryValues() {
 
-        Pageable page = PageRequest.of(1, 10, Sort.by("a"));
+        Pageable page = PageRequest.of(1, 10);
+        UsersSearchParamsDto searchParamsDto = new UsersSearchParamsDto();
+        UsersOrderCondition usersOrderCondition = UsersOrderCondition.builder().name("test").birth("950315").orderDirection(Order.DESC).build();
+        usersRepository.findAllUsersDetailsByParams(searchParamsDto, page, usersOrderCondition);
     }
 }

@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.models.search;
+package v2.sideproject.store.user.models.condition;
 
 import lombok.Getter;
 
