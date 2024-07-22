@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.dto.response;
+package v2.sideproject.store.user.models.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -12,7 +12,7 @@ import v2.sideproject.store.user.enums.RolesName;
 @Data
 @AllArgsConstructor
 @Builder
-public class UsersInfoResponseDto {
+public class UsersInfoResponse  {
 
     @Email
     @NotEmpty(message = "Email cannot be null or empty")

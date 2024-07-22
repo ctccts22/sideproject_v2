@@ -10,12 +10,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import v2.sideproject.store.user.entity.Addresses;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
-import v2.sideproject.store.user.enums.Gender;
-import v2.sideproject.store.user.enums.MobileCarrier;
-import v2.sideproject.store.user.enums.RolesName;
-import v2.sideproject.store.user.enums.UsersStatus;
+import v2.sideproject.store.user.enums.*;
+import v2.sideproject.store.user.models.request.AddressesRequest;
+import v2.sideproject.store.user.repository.AddressesRepository;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
 
@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Transactional
+@Transactional // test rollback
 public class UsersRepositoryTest {
 
     @Autowired
@@ -34,9 +34,14 @@ public class UsersRepositoryTest {
     @Autowired
     private RolesRepository rolesRepository;
 
+    @Autowired
+    private AddressesRepository addressesRepository;
+
     private Users users;
 
     private Roles roles;
+
+    private Addresses addresses;
 
 
     @BeforeEach
@@ -66,6 +71,15 @@ public class UsersRepositoryTest {
 
         Users savedUsers = usersRepository.save(checkUser);
 
+        var addresses = Addresses.builder()
+                .mainAddress("관악구 봉천동")
+                .subAddress("303호")
+                .zipCode("90045")
+                .phone("000-000-0000")
+                .addressesType(AddressesType.HOME)
+                .users(savedUsers)
+                .build();
+        addressesRepository.save(addresses);
         System.out.println("checkUser " + checkUser);
 
         assertThat(savedUsers).isNotNull();

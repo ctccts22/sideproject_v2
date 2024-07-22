@@ -2,26 +2,26 @@ package v2.sideproject.store.user.mapper;
 
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
-import v2.sideproject.store.user.dto.request.UsersRegisterRequestDto;
-import v2.sideproject.store.user.dto.response.UsersRegisterResponseDto;
+import v2.sideproject.store.user.models.request.UsersRegisterRequest;
+import v2.sideproject.store.user.models.response.UsersRegisterResponse;
 
 public class UsersMapper {
-    public static Users mapToUsersDetailsRequestDto(UsersRegisterRequestDto usersRegisterRequestDto) {
+    public static Users mapToUsersDetailsRequestDto(UsersRegisterRequest usersRegisterRequest) {
         Users users = Users.builder()
-                .email(usersRegisterRequestDto.getEmail())
-                .password(usersRegisterRequestDto.getPassword())
-                .name(usersRegisterRequestDto.getName())
-                .birth(usersRegisterRequestDto.getBirth())
-                .gender(usersRegisterRequestDto.getGender())
-                .status(usersRegisterRequestDto.getStatus())
-                .mobileCarrier(usersRegisterRequestDto.getMobileCarrier())
-                .phone(usersRegisterRequestDto.getPhone())
+                .email(usersRegisterRequest.getEmail())
+                .password(usersRegisterRequest.getPassword())
+                .name(usersRegisterRequest.getName())
+                .birth(usersRegisterRequest.getBirth())
+                .gender(usersRegisterRequest.getGender())
+                .status(usersRegisterRequest.getStatus())
+                .mobileCarrier(usersRegisterRequest.getMobileCarrier())
+                .phone(usersRegisterRequest.getPhone())
                 .build();
         return users;
     }
 
-    public static UsersRegisterRequestDto mapFromUsersDetailsRequestDtoToUsers(Users users) {
-        UsersRegisterRequestDto usersRegisterRequestDto = UsersRegisterRequestDto.builder()
+    public static UsersRegisterRequest mapFromUsersDetailsRequestDtoToUsers(Users users) {
+        UsersRegisterRequest usersRegisterRequest = UsersRegisterRequest.builder()
                 .email(users.getEmail())
                 .password(users.getPassword())
                 .name(users.getName())
@@ -31,27 +31,27 @@ public class UsersMapper {
                 .mobileCarrier(users.getMobileCarrier())
                 .phone(users.getPhone())
                 .build();
-        return usersRegisterRequestDto;
+        return usersRegisterRequest;
     }
 
 
-    public static Users mapToUsersDetailsResponseDto(UsersRegisterResponseDto usersRegisterResponseDto, Roles roles) {
+    public static Users mapToUsersDetailsResponseDto(UsersRegisterResponse usersRegisterResponse, Roles roles) {
         Users users = Users.builder()
-                .email(usersRegisterResponseDto.getEmail())
-                .password(usersRegisterResponseDto.getPassword())
-                .name(usersRegisterResponseDto.getName())
-                .birth(usersRegisterResponseDto.getBirth())
-                .gender(usersRegisterResponseDto.getGender())
-                .status(usersRegisterResponseDto.getStatus())
-                .mobileCarrier(usersRegisterResponseDto.getMobileCarrier())
-                .phone(usersRegisterResponseDto.getPhone())
+                .email(usersRegisterResponse.getEmail())
+                .password(usersRegisterResponse.getPassword())
+                .name(usersRegisterResponse.getName())
+                .birth(usersRegisterResponse.getBirth())
+                .gender(usersRegisterResponse.getGender())
+                .status(usersRegisterResponse.getStatus())
+                .mobileCarrier(usersRegisterResponse.getMobileCarrier())
+                .phone(usersRegisterResponse.getPhone())
                 .roles(roles)
                 .build();
         return users;
     }
 
-    public static UsersRegisterResponseDto mapFromUsersDetailsResponseDtoToUsers(Users users) {
-        UsersRegisterResponseDto usersRegisterResponseDto = UsersRegisterResponseDto.builder()
+    public static UsersRegisterResponse mapFromUsersDetailsResponseDtoToUsers(Users users) {
+        UsersRegisterResponse usersRegisterResponse = UsersRegisterResponse.builder()
                 .email(users.getEmail())
                 .password(users.getPassword())
                 .name(users.getName())
@@ -61,6 +61,6 @@ public class UsersMapper {
                 .mobileCarrier(users.getMobileCarrier())
                 .phone(users.getPhone())
                 .build();
-        return usersRegisterResponseDto;
+        return usersRegisterResponse;
     }
 }

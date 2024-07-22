@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.error.ErrorResponseDto;
 import v2.sideproject.store.redis.config.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
-import v2.sideproject.store.user.dto.request.UsersRegisterRequestDto;
-import v2.sideproject.store.user.dto.response.UsersRegisterResponseDto;
-import v2.sideproject.store.user.dto.response.UsersStatusResponseDto;
-import v2.sideproject.store.user.dto.search.UsersSearchParamsDto;
+import v2.sideproject.store.user.models.request.UsersRegisterRequest;
+import v2.sideproject.store.user.models.response.UsersDetailsResponse;
+import v2.sideproject.store.user.models.response.UsersRegisterResponse;
+import v2.sideproject.store.user.models.response.UsersStatusResponse;
+import v2.sideproject.store.user.models.search.UsersSearchParamsDto;
 import v2.sideproject.store.user.service.UsersService;
 
 @Tag(
@@ -54,10 +55,10 @@ public class UsersController {
             )
     })
     @GetMapping(path = "/fetchAll")
-    public ResponseEntity<RestPage<UsersRegisterResponseDto>> fetchAllUsersDetails(
+    public ResponseEntity<RestPage<UsersDetailsResponse>> fetchAllUsersDetails(
             @ModelAttribute UsersSearchParamsDto usersSearchParamsDto,
                                                                                   Pageable pageable) {
-        RestPage<UsersRegisterResponseDto> usersDetailsResponseDto = usersService.fetchAllUsersDetails(usersSearchParamsDto, pageable);
+        RestPage<UsersDetailsResponse> usersDetailsResponseDto = usersService.fetchAllUsersDetails(usersSearchParamsDto, pageable);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usersDetailsResponseDto);
@@ -83,11 +84,11 @@ public class UsersController {
     }
     )
     @PostMapping(path = "/registration")
-    public ResponseEntity<UsersStatusResponseDto> createUsers(@Valid
-                                                                 @RequestBody UsersRegisterRequestDto usersRegisterRequestDto) {
-        usersService.createUsers(usersRegisterRequestDto);
+    public ResponseEntity<UsersStatusResponse> createUsers(@Valid
+                                                                 @RequestBody UsersRegisterRequest usersRegisterRequest) {
+        usersService.createUsers(usersRegisterRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new UsersStatusResponseDto(UsersConstants.STATUS_201, UsersConstants.MESSAGE_201));
+                .body(new UsersStatusResponse(UsersConstants.STATUS_201, UsersConstants.MESSAGE_201));
     }
 }

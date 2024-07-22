@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.dto.response;
+package v2.sideproject.store.user.models.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import v2.sideproject.store.user.enums.AddressesType;
 
 
 @Schema(
@@ -15,7 +16,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class AddressesResponseDto {
+public class AddressesResponse  {
     @NotEmpty(message = "mainAddress cannot be null or empty")
     @Schema(description = "User's mainAddress", example = "봉천동")
     private String mainAddress;
@@ -28,7 +29,11 @@ public class AddressesResponseDto {
     @NotEmpty(message = "zipCode cannot be null or empty")
     @Schema(description = "User's zipCode", example = "90045")
     private String zipCode;
+    @NotEmpty(message = "addressesType cannot be null or empty")
+    @Schema(description = "User's addressesType", example = "HOME")
+    private AddressesType addressesType;
     @NotNull(message = "userId is fk from users table ")
-    @Schema(description = "User's id", example = "90045")
+    @Schema(description = "User's id", example = "1")
     private Long userId;
+
 }

@@ -17,11 +17,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import v2.sideproject.store.jwt.JwtTokenProvider;
 import v2.sideproject.store.user.constants.AuthConstants;
-import v2.sideproject.store.user.dto.request.UsersLoginRequestDto;
+import v2.sideproject.store.user.models.request.UsersLoginRequest;
 import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.AuthService;
 import v2.sideproject.store.user.userDetails.CustomUserDetails;
-import v2.sideproject.store.user.dto.response.UsersInfoResponseDto;
+import v2.sideproject.store.user.models.response.UsersInfoResponse;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -42,15 +42,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void login(UsersLoginRequestDto usersLoginRequestDto, HttpServletResponse response) {
+    public void login(UsersLoginRequest usersLoginRequest, HttpServletResponse response) {
 
-        usersRepository.findByEmail(usersLoginRequestDto.getEmail())
+        usersRepository.findByEmail(usersLoginRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(AuthConstants.MESSAGE_404));
 
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(usersLoginRequestDto.getEmail(), usersLoginRequestDto.getPassword())
+                    new UsernamePasswordAuthenticationToken(usersLoginRequest.getEmail(), usersLoginRequest.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public UsersInfoResponseDto getUserInfo() {
+    public UsersInfoResponse getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = customUserDetails.loadUserByUsername(authentication.getName());
         var usersInfo = usersRepository.findByEmail(userDetails.getUsername())
@@ -146,7 +146,7 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("test1");
         }
 
-        return UsersInfoResponseDto.builder()
+        return UsersInfoResponse.builder()
                 .email(usersInfo.getEmail())
                 .roleName(usersInfo.getRoles().getName())
                 .build();

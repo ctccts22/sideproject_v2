@@ -12,15 +12,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import v2.sideproject.store.user.constants.UsersConstants;
 import v2.sideproject.store.user.controller.UsersController;
-import v2.sideproject.store.user.dto.request.AddressesRequestDto;
+import v2.sideproject.store.user.enums.AddressesType;
+import v2.sideproject.store.user.models.request.AddressesRequest;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
-import v2.sideproject.store.user.dto.request.UsersRegisterRequestDto;
-import v2.sideproject.store.user.dto.response.UsersStatusResponseDto;
+import v2.sideproject.store.user.models.request.UsersRegisterRequest;
+import v2.sideproject.store.user.models.response.UsersStatusResponse;
 import v2.sideproject.store.users.security.WithMockCustomUser;
 
 
@@ -43,20 +44,21 @@ public class UsersControllerTest {
     private UsersServiceImpl usersService;
 
     private Users users;
-    private UsersRegisterRequestDto usersRegisterRequestDto;
-    private UsersStatusResponseDto usersStatusResponseDto;
-    private AddressesRequestDto addressesRequestDto;
+    private UsersRegisterRequest usersRegisterRequest;
+    private UsersStatusResponse usersStatusResponse;
+    private AddressesRequest addressesRequest;
     private Roles roles;
 
     @BeforeEach
     void setup() {
-        addressesRequestDto = AddressesRequestDto.builder()
+        addressesRequest = AddressesRequest.builder()
                 .mainAddress("관악구 봉천동")
                 .subAddress("303호")
                 .zipCode("90045")
                 .phone("000-000-0000")
+                .addressesType(AddressesType.HOME)
                 .build();
-        usersRegisterRequestDto = UsersRegisterRequestDto.builder()
+        usersRegisterRequest = UsersRegisterRequest.builder()
                 .email("testForJunit@test.com")
                 .password("test")
                 .checkPassword("test")
@@ -66,7 +68,7 @@ public class UsersControllerTest {
                 .status(UsersStatus.APPROVED)
                 .mobileCarrier(MobileCarrier.KT)
                 .phone("000-0000-0000")
-                .address(addressesRequestDto)
+                .address(addressesRequest)
                 .build();
 }
 
@@ -76,10 +78,10 @@ public class UsersControllerTest {
     void givenUserObject_whenCreateUser_thenReturnSavedUser() throws Exception {
 
         // given
-        String userBody = objectMapper.writeValueAsString(usersRegisterRequestDto);
+        String userBody = objectMapper.writeValueAsString(usersRegisterRequest);
 
         // void
-        doNothing().when(usersService).createUsers(any(UsersRegisterRequestDto.class));
+        doNothing().when(usersService).createUsers(any(UsersRegisterRequest.class));
 
         // when
         ResultActions response = mockMvc.perform(post("/api/users/registration")

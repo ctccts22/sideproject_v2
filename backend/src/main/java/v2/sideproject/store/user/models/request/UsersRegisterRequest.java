@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.dto.request;
+package v2.sideproject.store.user.models.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -18,7 +18,7 @@ import v2.sideproject.store.user.enums.UsersStatus;
 @Getter
 @Builder
 @AllArgsConstructor
-public class UsersRegisterRequestDto {
+public class UsersRegisterRequest {
 
     @Email
     @NotEmpty(message = "Email cannot be null or empty")
@@ -59,5 +59,5 @@ public class UsersRegisterRequestDto {
 
     @NotNull(message = "Address cannot be null")
     @Schema(description = "User's address")
-    private AddressesRequestDto address;
+    private AddressesRequest address;
 }

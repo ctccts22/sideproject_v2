@@ -12,9 +12,11 @@ import v2.sideproject.store.exception.PasswordMismatchException;
 import v2.sideproject.store.exception.UsersAlreadyExistsException;
 import v2.sideproject.store.redis.config.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
-import v2.sideproject.store.user.dto.response.AddressesResponseDto;
-import v2.sideproject.store.user.dto.response.UsersRegisterResponseDto;
-import v2.sideproject.store.user.dto.search.UsersSearchParamsDto;
+import v2.sideproject.store.user.models.dto.UsersDto;
+import v2.sideproject.store.user.models.response.AddressesResponse;
+import v2.sideproject.store.user.models.response.UsersDetailsResponse;
+import v2.sideproject.store.user.models.response.UsersRegisterResponse;
+import v2.sideproject.store.user.models.search.UsersSearchParamsDto;
 import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.RolesName;
 import v2.sideproject.store.user.enums.UsersStatus;
@@ -23,7 +25,7 @@ import v2.sideproject.store.user.mapper.UsersMapper;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.UsersService;
-import v2.sideproject.store.user.dto.request.UsersRegisterRequestDto;
+import v2.sideproject.store.user.models.request.UsersRegisterRequest;
 
 import java.util.Optional;
 
@@ -37,19 +39,19 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     @Transactional
-    public void createUsers(UsersRegisterRequestDto usersRegisterRequestDto) {
-        checkPassword(usersRegisterRequestDto);
-        checkDuplicatedEmail(usersRegisterRequestDto);
+    public void createUsers(UsersRegisterRequest usersRegisterRequest) {
+        checkPassword(usersRegisterRequest);
+        checkDuplicatedEmail(usersRegisterRequest);
         // response
-        var checkUserDto = UsersRegisterResponseDto.builder()
-                .email(usersRegisterRequestDto.getEmail())
-                .password(passwordEncoder.encode(usersRegisterRequestDto.getPassword()))
-                .name(usersRegisterRequestDto.getName())
-                .birth(usersRegisterRequestDto.getBirth())
-                .gender(usersRegisterRequestDto.getGender())
+        var checkUserDto = UsersRegisterResponse.builder()
+                .email(usersRegisterRequest.getEmail())
+                .password(passwordEncoder.encode(usersRegisterRequest.getPassword()))
+                .name(usersRegisterRequest.getName())
+                .birth(usersRegisterRequest.getBirth())
+                .gender(usersRegisterRequest.getGender())
                 .status(UsersStatus.PENDING)
-                .mobileCarrier(usersRegisterRequestDto.getMobileCarrier())
-                .phone(usersRegisterRequestDto.getPhone())
+                .mobileCarrier(usersRegisterRequest.getMobileCarrier())
+                .phone(usersRegisterRequest.getPhone())
                 .build();
 
         var roles = rolesRepository.findByName(RolesName.CUSTOMER)
@@ -61,34 +63,37 @@ public class UsersServiceImpl implements UsersService {
         var savedUsers = usersRepository.save(users);
 
 
-        AddressesResponseDto addressesResponseDto = AddressesResponseDto.builder()
+        AddressesResponse addressesResponse = AddressesResponse.builder()
                 .userId(savedUsers.getUserId())
-                .mainAddress(usersRegisterRequestDto.getAddress().getMainAddress())
-                .subAddress(usersRegisterRequestDto.getAddress().getSubAddress())
-                .zipCode(usersRegisterRequestDto.getAddress().getZipCode())
-                .phone(usersRegisterRequestDto.getAddress().getPhone())
+                .mainAddress(usersRegisterRequest.getAddress().getMainAddress())
+                .subAddress(usersRegisterRequest.getAddress().getSubAddress())
+                .zipCode(usersRegisterRequest.getAddress().getZipCode())
+                .phone(usersRegisterRequest.getAddress().getPhone())
                 .build();
 
-        AddressesMapper.mapToAddresses(addressesResponseDto);
+        AddressesMapper.mapToAddresses(addressesResponse);
     }
 
     @Override
     @Cacheable(value = "fetchAllUserByParams", keyGenerator = "customKeyGenerator")
-    public RestPage<UsersRegisterResponseDto> fetchAllUsersDetails(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable) {
-        Page<UsersRegisterResponseDto> usersDetailsByParams = usersRepository.findAllUsersDetailsByParams(usersSearchParamsDto, pageable);
-        return new RestPage<>(usersDetailsByParams);
+    public RestPage<UsersDetailsResponse> fetchAllUsersDetails(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable) {
+
+        Page<UsersDto> usersDetailsByParams = usersRepository.findAllUsersDetailsByParams(usersSearchParamsDto, pageable);
+
+        // mapping
+        return new RestPage<>(null);
     }
 
 
-    private void checkDuplicatedEmail(UsersRegisterRequestDto usersRegisterRequestDto) {
-        Optional<Users> checkDuplicated = usersRepository.findByEmail(usersRegisterRequestDto.getEmail());
+    private void checkDuplicatedEmail(UsersRegisterRequest usersRegisterRequest) {
+        Optional<Users> checkDuplicated = usersRepository.findByEmail(usersRegisterRequest.getEmail());
         if (checkDuplicated.isPresent()) {
             throw new UsersAlreadyExistsException(UsersConstants.DUPLICATED_EMAIL);
         }
     }
 
-    private void checkPassword(UsersRegisterRequestDto usersRegisterRequestDto) {
-        if (!usersRegisterRequestDto.getCheckPassword().equals(usersRegisterRequestDto.getPassword())) {
+    private void checkPassword(UsersRegisterRequest usersRegisterRequest) {
+        if (!usersRegisterRequest.getCheckPassword().equals(usersRegisterRequest.getPassword())) {
             throw new PasswordMismatchException(UsersConstants.PASSWORD_MISMATCH);
         }
     }

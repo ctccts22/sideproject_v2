@@ -11,19 +11,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import v2.sideproject.store.user.dto.request.AddressesRequestDto;
-import v2.sideproject.store.user.dto.response.UsersRegisterResponseDto;
+import v2.sideproject.store.user.enums.*;
+import v2.sideproject.store.user.models.request.AddressesRequest;
+import v2.sideproject.store.user.models.response.UsersRegisterResponse;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
-import v2.sideproject.store.user.enums.Gender;
-import v2.sideproject.store.user.enums.MobileCarrier;
-import v2.sideproject.store.user.enums.RolesName;
-import v2.sideproject.store.user.enums.UsersStatus;
 import v2.sideproject.store.user.mapper.UsersMapper;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
-import v2.sideproject.store.user.dto.request.UsersRegisterRequestDto;
+import v2.sideproject.store.user.models.request.UsersRegisterRequest;
 
 import java.util.Optional;
 
@@ -48,19 +45,20 @@ public class UsersServiceTest {
     private UsersServiceImpl usersService;
 
     private Users users;
-    private UsersRegisterRequestDto usersRegisterRequestDto;
-    private AddressesRequestDto addressesRequestDto;
+    private UsersRegisterRequest usersRegisterRequest;
+    private AddressesRequest addressesRequest;
     private Roles roles;
 
     @BeforeEach
     void setup() {
-        addressesRequestDto = AddressesRequestDto.builder()
+        addressesRequest = AddressesRequest.builder()
                 .mainAddress("관악구 봉천동")
                 .subAddress("303호")
                 .zipCode("90045")
                 .phone("000-000-0000")
+                .addressesType(AddressesType.HOME)
                 .build();
-        usersRegisterRequestDto = UsersRegisterRequestDto.builder()
+        usersRegisterRequest = UsersRegisterRequest.builder()
                 .email("testForJunit@test.com")
                 .password("test")
                 .checkPassword("test")
@@ -70,7 +68,7 @@ public class UsersServiceTest {
                 .status(UsersStatus.APPROVED)
                 .mobileCarrier(MobileCarrier.KT)
                 .phone("000-0000-0000")
-                .address(addressesRequestDto)
+                .address(addressesRequest)
                 .build();
         roles = Roles.builder()
                 .roleId("3")
@@ -81,15 +79,15 @@ public class UsersServiceTest {
     @DisplayName("JUnit test for saveUsers method")
     @Test
     void givenSavedUser_whenOccurCreateService_thenReturnValue() {
-        var usersDetailsResponseDto = UsersRegisterResponseDto.builder()
-                .email(usersRegisterRequestDto.getEmail())
-                .password(usersRegisterRequestDto.getPassword())
-                .name(usersRegisterRequestDto.getName())
-                .birth(usersRegisterRequestDto.getBirth())
-                .gender(usersRegisterRequestDto.getGender())
-                .status(usersRegisterRequestDto.getStatus())
-                .mobileCarrier(usersRegisterRequestDto.getMobileCarrier())
-                .phone(usersRegisterRequestDto.getPhone())
+        var usersDetailsResponseDto = UsersRegisterResponse.builder()
+                .email(usersRegisterRequest.getEmail())
+                .password(usersRegisterRequest.getPassword())
+                .name(usersRegisterRequest.getName())
+                .birth(usersRegisterRequest.getBirth())
+                .gender(usersRegisterRequest.getGender())
+                .status(usersRegisterRequest.getStatus())
+                .mobileCarrier(usersRegisterRequest.getMobileCarrier())
+                .phone(usersRegisterRequest.getPhone())
                 .build();
 
         users = UsersMapper.mapToUsersDetailsResponseDto(usersDetailsResponseDto, roles);
@@ -102,7 +100,7 @@ public class UsersServiceTest {
                 .willReturn(users);
 
         // when
-        usersService.createUsers(usersRegisterRequestDto);
+        usersService.createUsers(usersRegisterRequest);
 
         // then
         verify(usersRepository, times(1)).save(any(Users.class));

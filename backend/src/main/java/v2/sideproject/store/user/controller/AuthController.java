@@ -17,10 +17,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.user.constants.AuthConstants;
-import v2.sideproject.store.user.dto.request.UsersLoginRequestDto;
+import v2.sideproject.store.user.models.request.UsersLoginRequest;
 import v2.sideproject.store.user.service.AuthService;
-import v2.sideproject.store.user.dto.response.UsersInfoResponseDto;
-import v2.sideproject.store.user.dto.response.UsersStatusResponseDto;
+import v2.sideproject.store.user.models.response.UsersInfoResponse;
+import v2.sideproject.store.user.models.response.UsersStatusResponse;
 
 
 @RequestMapping(path = "/api/auth", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -60,12 +60,12 @@ public class AuthController {
     }
     )
     @PostMapping(path = "/login")
-    public ResponseEntity<UsersStatusResponseDto> Login(@RequestBody UsersLoginRequestDto usersLoginRequestDto,
-                                                        HttpServletResponse response) throws BadRequestException {
-        authService.login(usersLoginRequestDto, response);
+    public ResponseEntity<UsersStatusResponse> Login(@RequestBody UsersLoginRequest usersLoginRequest,
+                                                     HttpServletResponse response) throws BadRequestException {
+        authService.login(usersLoginRequest, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new UsersStatusResponseDto(AuthConstants.STATUS_200, AuthConstants.MESSAGE_Login_200));
+                .body(new UsersStatusResponse(AuthConstants.STATUS_200, AuthConstants.MESSAGE_Login_200));
     }
 
     @Operation(
@@ -88,13 +88,13 @@ public class AuthController {
     }
     )
     @PostMapping(path ="/logout")
-    public ResponseEntity<UsersStatusResponseDto> Logout(
+    public ResponseEntity<UsersStatusResponse> Logout(
             HttpServletResponse response,
             HttpServletRequest request) {
         authService.logout(request, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new UsersStatusResponseDto(AuthConstants.STATUS_200, AuthConstants.MESSAGE_Logout_200));
+                .body(new UsersStatusResponse(AuthConstants.STATUS_200, AuthConstants.MESSAGE_Logout_200));
     }
 
     @Operation(
@@ -117,14 +117,14 @@ public class AuthController {
 
     })
     @GetMapping(path ="/accessToken")
-    public ResponseEntity<UsersStatusResponseDto> getAccessToken(
+    public ResponseEntity<UsersStatusResponse> getAccessToken(
             HttpServletRequest request,
             HttpServletResponse response
     ) {
         authService.getAccessToken(request, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new UsersStatusResponseDto(AuthConstants.STATUS_200, AuthConstants.MESSAGE_TOKEN_200));
+                .body(new UsersStatusResponse(AuthConstants.STATUS_200, AuthConstants.MESSAGE_TOKEN_200));
     }
 
     @Operation(
@@ -147,10 +147,10 @@ public class AuthController {
 
     })
     @GetMapping(path ="/usersInfo")
-    public ResponseEntity<UsersInfoResponseDto> getUserInfo() {
-        UsersInfoResponseDto usersInfoResponseDto = authService.getUserInfo();
+    public ResponseEntity<UsersInfoResponse> getUserInfo() {
+        UsersInfoResponse usersInfoResponse = authService.getUserInfo();
         return ResponseEntity.status(HttpStatus.OK)
-                .body(usersInfoResponseDto);
+                .body(usersInfoResponse);
     }
 
 }

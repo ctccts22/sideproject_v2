@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import v2.sideproject.store.user.enums.AddressesType;
 
 @Entity
 @AllArgsConstructor
@@ -33,5 +34,9 @@ public class Addresses {
 
     @Column(name = "phone", nullable = false)
     private String phone;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name= "addressType", nullable = false)
+    private AddressesType addressesType;
 
 }
