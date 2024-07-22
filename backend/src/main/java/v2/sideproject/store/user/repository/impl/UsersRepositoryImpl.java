@@ -63,8 +63,8 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
                 ))
                 .from(users)
                 .orderBy(orderSpecifiers)
-                .join(users.roles, roles)
-                .join(users.addressesSet, addresses)
+                .leftJoin(users.roles, roles)
+                .leftJoin(users.addressesSet, addresses)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

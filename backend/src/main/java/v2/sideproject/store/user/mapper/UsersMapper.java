@@ -2,7 +2,9 @@ package v2.sideproject.store.user.mapper;
 
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
+import v2.sideproject.store.user.models.dto.UsersDto;
 import v2.sideproject.store.user.models.request.UsersRegisterRequest;
+import v2.sideproject.store.user.models.response.UsersDetailsResponse;
 import v2.sideproject.store.user.models.response.UsersRegisterResponse;
 
 public class UsersMapper {
@@ -62,5 +64,22 @@ public class UsersMapper {
                 .phone(users.getPhone())
                 .build();
         return usersRegisterResponse;
+    }
+
+    public static UsersDetailsResponse mapFromUsersDtoToUsersDetailsResponse(UsersDto usersDto) {
+        if (usersDto == null) {
+            return null;
+        }
+        return UsersDetailsResponse.builder()
+                .email(usersDto.getEmail())
+                .name(usersDto.getName())
+                .birth(usersDto.getBirth())
+                .status(usersDto.getStatus())
+                .gender(usersDto.getGender())
+                .mobileCarrier(usersDto.getMobileCarrier())
+                .phone(usersDto.getPhone())
+                .roleName(usersDto.getRoles() != null ? usersDto.getRoles().getName() : null)
+                .addressesSet(usersDto.getAddressesSet())
+                .build();
     }
 }

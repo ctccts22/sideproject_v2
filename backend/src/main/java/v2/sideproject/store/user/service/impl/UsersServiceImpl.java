@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,9 @@ import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.UsersService;
 import v2.sideproject.store.user.models.request.UsersRegisterRequest;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -81,8 +84,13 @@ public class UsersServiceImpl implements UsersService {
 
         Page<UsersDto> usersDetailsByParams = usersRepository.findAllUsersDetailsByParams(usersSearchParamsDto, pageable, usersOrderCondition);
 
-        // mapping
-        return new RestPage<>(null);
+        List<UsersDetailsResponse> usersDetailsResponseList = usersDetailsByParams.getContent()
+                .stream()
+                .map(UsersMapper::mapFromUsersDtoToUsersDetailsResponse)
+                .toList();
+        Page<UsersDetailsResponse> usersDetailsResponsePage = new PageImpl<>(usersDetailsResponseList, pageable, usersDetailsByParams.getTotalElements());
+
+        return new RestPage<>(usersDetailsResponsePage);
     }
 
 
