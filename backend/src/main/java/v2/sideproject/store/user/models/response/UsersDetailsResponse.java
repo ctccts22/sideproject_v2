@@ -14,7 +14,9 @@ import v2.sideproject.store.user.enums.RolesName;
 import v2.sideproject.store.user.enums.UsersStatus;
 import v2.sideproject.store.user.models.dto.AddressesDto;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -58,5 +60,5 @@ public class UsersDetailsResponse {
 
     @NotNull(message = "Status cannot be null")
     @Schema(description = "RoleName associated with the user", example = "ADMIN")
-    private Set<AddressesDto> addressesSet = new HashSet<>();
+    private List<AddressesDto> addressesList = new ArrayList<>();
 }

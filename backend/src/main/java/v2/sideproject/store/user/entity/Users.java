@@ -8,7 +8,9 @@ import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -56,5 +58,5 @@ public class Users extends UsersBaseEntity {
     private Roles roles;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Addresses> addressesSet = new HashSet<>();
+    private List<Addresses> addressesList = new ArrayList<>();
 }

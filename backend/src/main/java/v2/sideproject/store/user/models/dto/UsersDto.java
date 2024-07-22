@@ -8,7 +8,9 @@ import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -27,5 +29,5 @@ public class UsersDto {
     private MobileCarrier mobileCarrier;
     private String phone;
     private RolesDto roles;
-    private Set<AddressesDto> addressesSet = new HashSet<>();
+    private List<AddressesDto> addressesList = new ArrayList<>();
 }

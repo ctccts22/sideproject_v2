@@ -79,7 +79,7 @@ public class UsersMapper {
                 .mobileCarrier(usersDto.getMobileCarrier())
                 .phone(usersDto.getPhone())
                 .roleName(usersDto.getRoles() != null ? usersDto.getRoles().getName() : null)
-                .addressesSet(usersDto.getAddressesSet())
+                .addressesList(usersDto.getAddressesList())
                 .build();
     }
 }

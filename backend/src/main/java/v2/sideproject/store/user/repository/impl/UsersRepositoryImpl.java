@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import v2.sideproject.store.user.models.condition.UsersOrderCondition;
+import v2.sideproject.store.user.models.dto.AddressesDto;
 import v2.sideproject.store.user.models.dto.UsersDto;
 import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.entity.Users;
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 import static v2.sideproject.store.user.entity.QUsers.users;
 import static v2.sideproject.store.user.entity.QRoles.roles;
 import static v2.sideproject.store.user.entity.QAddresses.addresses;
@@ -51,6 +54,7 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
         OrderSpecifier<?>[] orderSpecifiers = createOrderSpecifiers(usersOrderCondition);
         List<UsersDto> content = queryFactory
                 .select(Projections.fields(UsersDto.class,
+                        users.userId.as("userId"),
                         users.email.as("email"),
                         users.name.as("name"),
                         users.birth.as("birth"),
@@ -58,22 +62,54 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
                         users.gender.as("gender"),
                         users.mobileCarrier.as("mobileCarrier"),
                         users.phone.as("phone"),
-                        users.roles.name.as("roleName"),
-                        users.addressesSet.as("addressesSet")
+                        users.roles.name.as("roles.name"),
+                        Projections.list(
+                                Projections.fields(AddressesDto.class,
+                                        addresses.addressesId.as("addressesId"),
+                                        addresses.mainAddress.as("mainAddress"),
+                                        addresses.subAddress.as("subAddress"),
+                                        addresses.zipCode.as("zipCode"),
+                                        addresses.phone.as("phone"),
+                                        addresses.addressesType.as("addressesType")
+                                ).as("addressesList")
+                        )
                 ))
                 .from(users)
-                .orderBy(orderSpecifiers)
                 .leftJoin(users.roles, roles)
-                .leftJoin(users.addressesSet, addresses)
+                .leftJoin(users.addressesList, addresses)
+                .orderBy(orderSpecifiers)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch();
+                .transform(
+                        groupBy(users.userId)
+                                .list(Projections.fields(UsersDto.class,
+                                        users.userId.as("userId"),
+                                        users.email.as("email"),
+                                        users.name.as("name"),
+                                        users.birth.as("birth"),
+                                        users.status.as("status"),
+                                        users.gender.as("gender"),
+                                        users.mobileCarrier.as("mobileCarrier"),
+                                        users.phone.as("phone"),
+                                        users.roles.name.as("roles.name"),
+                                        list(
+                                                Projections.fields(AddressesDto.class,
+                                                        addresses.addressesId.as("addressesId"),
+                                                        addresses.mainAddress.as("mainAddress"),
+                                                        addresses.subAddress.as("subAddress"),
+                                                        addresses.zipCode.as("zipCode"),
+                                                        addresses.phone.as("phone"),
+                                                        addresses.addressesType.as("addressesType")
+                                                )
+                                        ).as("addressesList")
+                                ))
+                );
 
-        JPAQuery<Users> count = queryFactory
+        JPAQuery<Users> countQuery = queryFactory
                 .select(users)
                 .from(users);
 
-        return PageableExecutionUtils.getPage(content, pageable, count::fetchCount);
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
 
