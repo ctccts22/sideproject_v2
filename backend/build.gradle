@@ -85,9 +85,9 @@ jooq {
                 logging = org.jooq.meta.jaxb.Logging.WARN
                 jdbc {
                     driver = 'org.postgresql.Driver'
-                    url = 'jdbc:postgresql://193.123.234.78:5432/mydb'
-                    user = 'myid'
-                    password = 'mypw'
+                    url = project.findProperty('db.url') ?: 'default_url'
+                    user = project.findProperty('db.user') ?: 'default_user'
+                    password = project.findProperty('db.password') ?: 'default_password'
                 }
                 generator {
                     name = 'org.jooq.codegen.DefaultGenerator'
