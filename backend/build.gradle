@@ -68,7 +68,8 @@ dependencies {
 
     // jooq
     jooqGenerator "org.postgresql:postgresql"
-
+    jooqGenerator "org.jooq:jooq-codegen:3.18.2"
+    implementation "org.jooq:jooq:3.18.2"
 }
 
 tasks.named('test') {
