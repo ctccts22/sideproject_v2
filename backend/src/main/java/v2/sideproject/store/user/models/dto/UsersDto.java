@@ -1,9 +1,6 @@
 package v2.sideproject.store.user.models.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
@@ -18,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Getter
+@ToString
 public class UsersDto {
     private Long userId;
     private String email;

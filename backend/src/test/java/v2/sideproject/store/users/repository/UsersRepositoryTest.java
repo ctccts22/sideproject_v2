@@ -2,6 +2,8 @@ package v2.sideproject.store.users.repository;
 
 import com.querydsl.core.types.Order;
 import jakarta.transaction.Transactional;
+import org.jooq.DSLContext;
+import org.jooq.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.repository.AddressesRepository;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
+import v2.sideproject.store.user.repository.UsersRepositoryCustoms;
 
 import java.util.UUID;
 
