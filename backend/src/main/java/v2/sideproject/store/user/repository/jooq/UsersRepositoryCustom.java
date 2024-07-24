@@ -8,8 +8,6 @@ import v2.sideproject.store.user.models.dto.UsersDto;
 import java.util.Optional;
 
 public interface UsersRepositoryCustom {
-
-
     Optional<UsersDto> findByEmailWithRole(String email);
 
     Page<UsersDto> findAllUsersDetailsByParams(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable);
