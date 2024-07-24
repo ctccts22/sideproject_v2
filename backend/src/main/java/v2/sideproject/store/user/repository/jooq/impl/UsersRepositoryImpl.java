@@ -95,6 +95,32 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
                 .build());
     }
 
+//    @Override
+//    public Optional<UsersDto> findByEmailWithRole(String email) {
+//        SelectField<?>[] selectFields = new SelectField<?>[]{
+//                USERS.USER_ID,
+//                USERS.EMAIL,
+//                USERS.PASSWORD,
+//                ROLES.ROLE_ID,
+//                ROLES.NAME,
+//        };
+//        UsersDto result = dsl.select(selectFields)
+//                .from(USERS)
+//                .join(ROLES).on(USERS.ROLE_ID.eq(ROLES.ROLE_ID))
+//                .where(USERS.EMAIL.eq(email))
+//                .fetchOneInto(UsersDto.class);
+//        log.info("result : {}", result);
+//        return Optional.ofNullable(result).map(l -> UsersDto.builder()
+//                .userId(l.getUserId())
+//                .password(l.getPassword())
+//                .email(l.getEmail())
+//                .roles(RolesDto.builder()
+//                        .roleId(l.getRoles().getRoleId())
+//                        .name(l.getRoles().getName())
+//                        .build())
+//                .build());
+//    }
+
     @Override
     public Page<UsersDto> findAllUsersDetailsByParams(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable) {
         log.info("usersSearchParamsDto : {}", usersSearchParamsDto);
