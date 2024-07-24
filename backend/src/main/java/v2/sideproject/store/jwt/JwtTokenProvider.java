@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import v2.sideproject.store.exception.APIException;
+import v2.sideproject.store.user.repository.jooq.UsersRepositoryCustom;
 import v2.sideproject.store.user.repository.jpa.UsersRepository;
 import v2.sideproject.store.user.userDetails.CustomUserDetails;
 
@@ -38,6 +39,7 @@ public class JwtTokenProvider {
     private final CustomUserDetails customUserDetails;
     private final RedisTemplate<String, String> redisTemplate;
     private final UsersRepository usersRepository;
+    private final UsersRepositoryCustom usersRepositoryCustom;
 
     public SecretKey getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(this.secretKey);
@@ -63,7 +65,7 @@ public class JwtTokenProvider {
     }
 
     public String createAccessToken(Authentication authentication) {
-        usersRepository.findByEmail(authentication.getName())
+        usersRepositoryCustom.findByEmail(authentication.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         String accessToken = publishAccessToken(authentication);

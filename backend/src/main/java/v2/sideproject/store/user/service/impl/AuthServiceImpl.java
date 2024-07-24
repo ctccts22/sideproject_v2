@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import v2.sideproject.store.jwt.JwtTokenProvider;
 import v2.sideproject.store.user.constants.AuthConstants;
 import v2.sideproject.store.user.models.request.UsersLoginRequest;
+import v2.sideproject.store.user.repository.jooq.UsersRepositoryCustom;
 import v2.sideproject.store.user.repository.jpa.UsersRepository;
 import v2.sideproject.store.user.service.AuthService;
 import v2.sideproject.store.user.userDetails.CustomUserDetails;
@@ -38,13 +39,14 @@ public class AuthServiceImpl implements AuthService {
     private final RedisTemplate<String, String> redisTemplate;
     private final UsersRepository usersRepository;
     private final CustomUserDetails customUserDetails;
+    private final UsersRepositoryCustom usersRepositoryCustom;
 
 
     @Override
     @Transactional
     public void login(UsersLoginRequest usersLoginRequest, HttpServletResponse response) {
 
-        usersRepository.findByEmail(usersLoginRequest.getEmail())
+        usersRepositoryCustom.findByEmail(usersLoginRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(AuthConstants.MESSAGE_404));
 
         Authentication authentication;
@@ -100,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = customUserDetails.loadUserByUsername(authentication.getName());
 
-        var usersInfo = usersRepository.findByEmail(userDetails.getUsername())
+        var usersInfo = usersRepositoryCustom.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
         String checkToken = redisTemplate.opsForValue().get(usersInfo.getEmail());
@@ -137,7 +139,7 @@ public class AuthServiceImpl implements AuthService {
     public UsersInfoResponse getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = customUserDetails.loadUserByUsername(authentication.getName());
-        var usersInfo = usersRepository.findByEmail(userDetails.getUsername())
+        var usersInfo = usersRepositoryCustom.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
         String checkToken = redisTemplate.opsForValue().get(usersInfo.getEmail());

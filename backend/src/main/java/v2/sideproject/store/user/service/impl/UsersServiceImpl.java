@@ -105,7 +105,7 @@ public class UsersServiceImpl implements UsersService {
 
 
     private void checkDuplicatedEmail(UsersRegisterRequest usersRegisterRequest) {
-        Optional<Users> checkDuplicated = usersRepository.findByEmail(usersRegisterRequest.getEmail());
+        Optional<UsersDto> checkDuplicated = usersRepositoryCustom.findByEmail(usersRegisterRequest.getEmail());
         if (checkDuplicated.isPresent()) {
             throw new UsersAlreadyExistsException(UsersConstants.DUPLICATED_EMAIL);
         }

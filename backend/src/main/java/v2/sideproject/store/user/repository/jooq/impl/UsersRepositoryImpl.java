@@ -31,6 +31,25 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
     private final DSLContext dsl;
 
     @Override
+    public UsersDto saveUsers(UsersDto usersDto) {
+//        dsl.insertInto(USERS)
+//                .values(USERS.EMAIL,USERS.PASSWORD,USERS.BIRTH );
+//
+
+        return null;
+    }
+
+    @Override
+    public Optional<UsersDto> findByEmail(String email) {
+        Record record = dsl.select(USERS.EMAIL)
+                .from(USERS)
+                .where(USERS.EMAIL.eq(email))
+                .fetchOne();
+        return Optional.ofNullable(record)
+                .map(r -> UsersDto.builder().email(r.get(USERS.EMAIL)).build());
+    }
+
+    @Override
     public Optional<UsersDto> findByEmailWithRole(String email) {
         SelectField<?>[] selectFields = new SelectField<?>[]{
                 USERS.USER_ID,
@@ -44,20 +63,15 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
                 .join(ROLES).on(USERS.ROLE_ID.eq(ROLES.ROLE_ID))
                 .where(USERS.EMAIL.eq(email))
                 .fetchOne();
-        if (result == null) {
-            throw new RuntimeException("User not found");
-        }
-        UsersDto usersDto = result
-                .map(record -> UsersDto.builder()
-                        .userId(record.get(USERS.USER_ID))
-                        .password(record.get(USERS.PASSWORD))
-                        .email(record.get(USERS.EMAIL))
-                        .roles(RolesDto.builder()
-                                .roleId(record.get(ROLES.ROLE_ID))
-                                .name(RolesName.valueOf(record.get(ROLES.NAME)))
-                                .build())
-                        .build());
-        return Optional.of(usersDto);
+        return Optional.ofNullable(result).map(r ->  UsersDto.builder()
+                .userId(r.get(USERS.USER_ID))
+                .password(r.get(USERS.PASSWORD))
+                .email(r.get(USERS.EMAIL))
+                .roles(RolesDto.builder()
+                        .roleId(r.get(ROLES.ROLE_ID))
+                        .name(RolesName.valueOf(r.get(ROLES.NAME)))
+                        .build())
+                .build());
     }
 
     @Override

@@ -17,6 +17,6 @@ public class UsersLoginRequest {
     private String email;
 
     @NotEmpty(message = "Password cannot be null or empty")
-    @Schema(description = "User's password", example = "password123")
+    @Schema(description = "User's password", example = "test")
     private String password;
 }
