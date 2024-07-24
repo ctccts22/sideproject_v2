@@ -102,7 +102,7 @@ jooq {
                         }
                     }
                     generate {
-                        daos = true
+                        daos = false // not my style..
                         records = true
                         fluentSetters = true
                         javaTimeTypes = true
