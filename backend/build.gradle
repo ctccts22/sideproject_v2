@@ -32,7 +32,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-//    implementation 'org.springframework.boot:spring-boot-starter-jooq'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -40,15 +39,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     runtimeOnly 'org.postgresql:postgresql'
-//    runtimeOnly 'com.h2database:h2'
-//    runtimeOnly 'com.mysql:mysql-connector-j'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // queryDSL -> jooq
-//    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-//    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
-//    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-//    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -59,10 +50,10 @@ dependencies {
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
-    // jpa logging
+    // db logging
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 
-    //jwt 관련 설정
+    //jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
@@ -76,7 +67,7 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
-// jooq gradle 버전 다운
+// jooq gradle 버전 8.2
 jooq {
     version = '3.18.2'
     edition = JooqEdition.OSS
@@ -125,19 +116,3 @@ jooq {
         }
     }
 }
-
-// queryDSL -> jooq
-// === QueryDsl 빌드 옵션 (선택) ===
-//def querydslDir = "$buildDir/generated/querydsl"
-//
-//sourceSets {
-//    main.java.srcDirs += [querydslDir]
-//}
-//
-//tasks.withType(JavaCompile) {
-//    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
-//}
-//
-//clean.doLast {
-//    file(querydslDir).deleteDir()
-//}
