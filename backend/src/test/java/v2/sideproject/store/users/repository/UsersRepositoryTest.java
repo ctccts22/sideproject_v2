@@ -1,6 +1,5 @@
 package v2.sideproject.store.users.repository;
 
-import com.querydsl.core.types.Order;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
