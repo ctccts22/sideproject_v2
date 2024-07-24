@@ -22,7 +22,6 @@ import v2.sideproject.store.filter.AuthoritiesLoggingAfterFilter;
 import v2.sideproject.store.filter.AuthoritiesLoggingAtFilter;
 import v2.sideproject.store.filter.JwtAuthenticationFilter;
 import v2.sideproject.store.jwt.JwtTokenProvider;
-import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.userDetails.CustomUserDetails;
 
 import java.util.List;

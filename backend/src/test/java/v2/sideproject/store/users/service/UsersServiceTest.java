@@ -17,8 +17,8 @@ import v2.sideproject.store.user.models.response.UsersRegisterResponse;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.mapper.UsersMapper;
-import v2.sideproject.store.user.repository.RolesRepository;
-import v2.sideproject.store.user.repository.UsersRepository;
+import v2.sideproject.store.user.repository.jpa.RolesRepository;
+import v2.sideproject.store.user.repository.jpa.UsersRepository;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
 import v2.sideproject.store.user.models.request.UsersRegisterRequest;
 

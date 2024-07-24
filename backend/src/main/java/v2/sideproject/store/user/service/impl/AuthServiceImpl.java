@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import v2.sideproject.store.jwt.JwtTokenProvider;
 import v2.sideproject.store.user.constants.AuthConstants;
 import v2.sideproject.store.user.models.request.UsersLoginRequest;
-import v2.sideproject.store.user.repository.UsersRepository;
+import v2.sideproject.store.user.repository.jpa.UsersRepository;
 import v2.sideproject.store.user.service.AuthService;
 import v2.sideproject.store.user.userDetails.CustomUserDetails;
 import v2.sideproject.store.user.models.response.UsersInfoResponse;

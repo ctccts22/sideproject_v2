@@ -1,6 +1,7 @@
 package v2.sideproject.store.user.models.dto;
 
 import lombok.*;
+import org.jooq.RecordMapper;
 import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
@@ -28,4 +29,10 @@ public class UsersDto {
     private String phone;
     private RolesDto roles;
     private List<AddressesDto> addressesList = new ArrayList<>();
+
+    public UsersDto(String email, String name, String birth) {
+        this.email = email;
+        this.name = name;
+        this.birth = birth;
+    }
 }

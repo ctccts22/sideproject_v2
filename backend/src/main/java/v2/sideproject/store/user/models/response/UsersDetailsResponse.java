@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.RolesName;
@@ -57,8 +54,4 @@ public class UsersDetailsResponse {
     @NotNull(message = "Status cannot be null")
     @Schema(description = "RoleName associated with the user", example = "ADMIN")
     private RolesName roleName;
-
-    @NotNull(message = "Status cannot be null")
-    @Schema(description = "RoleName associated with the user", example = "ADMIN")
-    private List<AddressesDto> addressesList = new ArrayList<>();
 }

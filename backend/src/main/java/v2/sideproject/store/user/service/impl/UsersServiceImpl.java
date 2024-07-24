@@ -13,7 +13,6 @@ import v2.sideproject.store.exception.PasswordMismatchException;
 import v2.sideproject.store.exception.UsersAlreadyExistsException;
 import v2.sideproject.store.redis.config.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
-import v2.sideproject.store.user.models.condition.UsersOrderCondition;
 import v2.sideproject.store.user.models.dto.UsersDto;
 import v2.sideproject.store.user.models.response.AddressesResponse;
 import v2.sideproject.store.user.models.response.UsersDetailsResponse;
@@ -24,20 +23,21 @@ import v2.sideproject.store.user.enums.RolesName;
 import v2.sideproject.store.user.enums.UsersStatus;
 import v2.sideproject.store.user.mapper.AddressesMapper;
 import v2.sideproject.store.user.mapper.UsersMapper;
-import v2.sideproject.store.user.repository.RolesRepository;
-import v2.sideproject.store.user.repository.UsersRepository;
+import v2.sideproject.store.user.repository.jpa.RolesRepository;
+import v2.sideproject.store.user.repository.jpa.UsersRepository;
+import v2.sideproject.store.user.repository.jooq.UsersRepositoryCustom;
 import v2.sideproject.store.user.service.UsersService;
 import v2.sideproject.store.user.models.request.UsersRegisterRequest;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
+    private final UsersRepositoryCustom usersRepositoryCustom;
     private final PasswordEncoder passwordEncoder;
     private final RolesRepository rolesRepository;
 
@@ -80,13 +80,23 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     @Cacheable(value = "fetchAllUserByParams", keyGenerator = "customKeyGenerator")
-    public RestPage<UsersDetailsResponse> fetchAllUsersDetails(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable, UsersOrderCondition usersOrderCondition) {
+    public RestPage<UsersDetailsResponse> fetchAllUsersDetails(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable) {
 
-        Page<UsersDto> usersDetailsByParams = usersRepository.findAllUsersDetailsByParams(usersSearchParamsDto, pageable, usersOrderCondition);
+        Page<UsersDto> usersDetailsByParams = usersRepositoryCustom.findAllUsersDetailsByParams(usersSearchParamsDto, pageable);
 
         List<UsersDetailsResponse> usersDetailsResponseList = usersDetailsByParams.getContent()
                 .stream()
-                .map(UsersMapper::mapFromUsersDtoToUsersDetailsResponse)
+                .map(record -> UsersDetailsResponse.builder()
+                        .email(record.getEmail())
+                        .name(record.getName())
+                        .birth(record.getBirth())
+                        .status(record.getStatus())
+                        .gender(record.getGender())
+                        .mobileCarrier(record.getMobileCarrier())
+                        .phone(record.getPhone())
+                        .roleName(record.getRoles() != null ? record.getRoles().getName() : null)
+                        .build()
+                )
                 .toList();
         Page<UsersDetailsResponse> usersDetailsResponsePage = new PageImpl<>(usersDetailsResponseList, pageable, usersDetailsByParams.getTotalElements());
 

@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.repository;
+package v2.sideproject.store.user.repository.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import v2.sideproject.store.user.entity.Roles;

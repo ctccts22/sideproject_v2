@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Getter
 public class AddressesDto implements Serializable {
     private Long addressesId;
+    private Long usersId;
     private String mainAddress;
     private String subAddress;
     private String zipCode;

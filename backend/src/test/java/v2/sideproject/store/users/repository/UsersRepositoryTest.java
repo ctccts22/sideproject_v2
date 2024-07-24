@@ -2,8 +2,6 @@ package v2.sideproject.store.users.repository;
 
 import com.querydsl.core.types.Order;
 import jakarta.transaction.Transactional;
-import org.jooq.DSLContext;
-import org.jooq.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,17 +10,14 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import v2.sideproject.store.user.entity.Addresses;
 import v2.sideproject.store.user.entity.Roles;
 import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.*;
-import v2.sideproject.store.user.models.condition.UsersOrderCondition;
 import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
-import v2.sideproject.store.user.repository.AddressesRepository;
-import v2.sideproject.store.user.repository.RolesRepository;
-import v2.sideproject.store.user.repository.UsersRepository;
-import v2.sideproject.store.user.repository.UsersRepositoryCustoms;
+import v2.sideproject.store.user.repository.jpa.AddressesRepository;
+import v2.sideproject.store.user.repository.jpa.RolesRepository;
+import v2.sideproject.store.user.repository.jpa.UsersRepository;
 
 import java.util.UUID;
 
@@ -105,7 +100,5 @@ public class UsersRepositoryTest {
 
         Pageable page = PageRequest.of(1, 10);
         UsersSearchParamsDto searchParamsDto = new UsersSearchParamsDto();
-        UsersOrderCondition usersOrderCondition = UsersOrderCondition.builder().name("test").birth("950315").orderDirection(Order.DESC).build();
-        usersRepository.findAllUsersDetailsByParams(searchParamsDto, page, usersOrderCondition);
     }
 }

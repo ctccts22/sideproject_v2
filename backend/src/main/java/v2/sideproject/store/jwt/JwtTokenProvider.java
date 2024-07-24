@@ -16,7 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import v2.sideproject.store.exception.APIException;
-import v2.sideproject.store.user.repository.UsersRepository;
+import v2.sideproject.store.user.repository.jpa.UsersRepository;
 import v2.sideproject.store.user.userDetails.CustomUserDetails;
 
 import javax.crypto.SecretKey;
