@@ -62,6 +62,7 @@ dependencies {
     jooqGenerator "org.postgresql:postgresql"
     jooqGenerator "org.jooq:jooq-codegen:3.18.2"
     implementation "org.jooq:jooq:3.18.2"
+//    jooqGenerator project(':jOOQ-custom')
 }
 
 tasks.named('test') {
@@ -101,10 +102,11 @@ jooq {
                         }
                     }
                     generate {
-                        deprecated = false
+                        daos = true
                         records = true
-                        immutablePojos = false
                         fluentSetters = true
+                        javaTimeTypes = true
+                        deprecated = false
                     }
                     target {
                         packageName = 'v2.sideproject.store'

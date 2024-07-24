@@ -15,12 +15,14 @@ import v2.sideproject.store.user.enums.UsersStatus;
 import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.models.dto.RolesDto;
 import v2.sideproject.store.user.models.dto.UsersDto;
+import v2.sideproject.store.user.models.response.UsersRegisterResponse;
 import v2.sideproject.store.user.repository.jooq.UsersRepositoryCustom;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static v2.sideproject.store.jooq.JooqConditionUtils.*;
 import static v2.sideproject.store.tables.Roles.*;
 import static v2.sideproject.store.tables.Users.USERS;
 
@@ -31,14 +33,33 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
     private final DSLContext dsl;
 
     @Override
-    public UsersDto saveUsers(UsersDto usersDto) {
-//        dsl.insertInto(USERS)
-//                .values(USERS.EMAIL,USERS.PASSWORD,USERS.BIRTH );
-//
-
-        return null;
+    public Long saveUsers(UsersRegisterResponse usersRegisterResponse, RolesDto rolesDto) {
+        return dsl.insertInto(USERS)
+                .columns(
+                        USERS.EMAIL,
+                        USERS.PASSWORD,
+                        USERS.NAME,
+                        USERS.BIRTH,
+                        USERS.GENDER,
+                        USERS.STATUS,
+                        USERS.MOBILE_CARRIER,
+                        USERS.PHONE,
+                        USERS.ROLE_ID
+                )
+                .values(
+                      usersRegisterResponse.getEmail(),
+                        usersRegisterResponse.getPassword(),
+                        usersRegisterResponse.getName(),
+                        usersRegisterResponse.getBirth(),
+                        String.valueOf(usersRegisterResponse.getGender()),
+                        String.valueOf(usersRegisterResponse.getStatus()),
+                        String.valueOf(usersRegisterResponse.getMobileCarrier()),
+                        usersRegisterResponse.getPhone(),
+                        rolesDto.getRoleId()
+                )
+                .returningResult(USERS.USER_ID)
+                .fetchOneInto(Long.class);
     }
-
     @Override
     public Optional<UsersDto> findByEmail(String email) {
         Record record = dsl.select(USERS.EMAIL)
@@ -91,10 +112,8 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
         Result<Record> result = dsl.select(selectFields)
                 .from(USERS)
                 .leftJoin(ROLES).on(USERS.ROLE_ID.eq(ROLES.ROLE_ID))
-                .where(
-                        USERS.NAME.eq(usersSearchParamsDto.getName())
-                                .or(USERS.BIRTH.eq(usersSearchParamsDto.getBirth()))
-                )
+                .where(eq(USERS.NAME, usersSearchParamsDto.getName())
+                        .or(eq(USERS.BIRTH, usersSearchParamsDto.getBirth())))
                 .orderBy(USERS.USER_ID)
                 .limit(pageable.getPageSize())
                 .offset((int) pageable.getOffset())
@@ -120,14 +139,12 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
         Integer count = dsl.selectCount()
                 .from(USERS)
                 .leftJoin(ROLES).on(USERS.ROLE_ID.eq(ROLES.ROLE_ID))
-                .where(
-                        USERS.NAME.eq(usersSearchParamsDto.getName())
-                                .or(USERS.BIRTH.eq(usersSearchParamsDto.getBirth()))
+                .where(eq(USERS.NAME, usersSearchParamsDto.getName())
+                        .or(eq(USERS.BIRTH, usersSearchParamsDto.getBirth()))
                 )
                 .fetchOne(0, Integer.class);
         count = (count != null) ? count : 0;
 
         return new PageImpl<>(users, pageable, count);
     }
-
 }

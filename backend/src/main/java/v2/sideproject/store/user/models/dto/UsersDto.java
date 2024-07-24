@@ -30,9 +30,4 @@ public class UsersDto {
     private RolesDto roles;
     private List<AddressesDto> addressesList = new ArrayList<>();
 
-    public UsersDto(String email, String name, String birth) {
-        this.email = email;
-        this.name = name;
-        this.birth = birth;
-    }
 }
