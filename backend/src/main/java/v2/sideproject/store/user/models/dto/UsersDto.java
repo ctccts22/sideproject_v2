@@ -16,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
 @ToString
 public class UsersDto {
     private Long userId;

@@ -18,6 +18,7 @@ import v2.sideproject.store.user.models.dto.UsersDto;
 import v2.sideproject.store.user.models.response.UsersRegisterResponse;
 import v2.sideproject.store.user.repository.jooq.UsersRepositoryCustom;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
                         USERS.ROLE_ID
                 )
                 .values(
-                      usersRegisterResponse.getEmail(),
+                        usersRegisterResponse.getEmail(),
                         usersRegisterResponse.getPassword(),
                         usersRegisterResponse.getName(),
                         usersRegisterResponse.getBirth(),
@@ -60,6 +61,7 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
                 .returningResult(USERS.USER_ID)
                 .fetchOneInto(Long.class);
     }
+
     @Override
     public Optional<UsersDto> findByEmail(String email) {
         Record record = dsl.select(USERS.EMAIL)
@@ -67,24 +69,24 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
                 .where(USERS.EMAIL.eq(email))
                 .fetchOne();
         return Optional.ofNullable(record)
-                .map(r -> UsersDto.builder().email(r.get(USERS.EMAIL)).build());
+                .map(r -> UsersDto.builder()
+                        .email(r.get(USERS.EMAIL))
+                        .build());
     }
 
     @Override
     public Optional<UsersDto> findByEmailWithRole(String email) {
-        SelectField<?>[] selectFields = new SelectField<?>[]{
-                USERS.USER_ID,
-                USERS.EMAIL,
-                USERS.PASSWORD,
-                ROLES.ROLE_ID,
-                ROLES.NAME,
-        };
-        Record result = dsl.select(selectFields)
+        Record result = dsl.select(USERS.USER_ID,
+                        USERS.EMAIL,
+                        USERS.PASSWORD,
+                        ROLES.ROLE_ID,
+                        ROLES.NAME)
                 .from(USERS)
                 .join(ROLES).on(USERS.ROLE_ID.eq(ROLES.ROLE_ID))
                 .where(USERS.EMAIL.eq(email))
                 .fetchOne();
-        return Optional.ofNullable(result).map(r ->  UsersDto.builder()
+        return Optional.ofNullable(result)
+                .map(r -> UsersDto.builder()
                 .userId(r.get(USERS.USER_ID))
                 .password(r.get(USERS.PASSWORD))
                 .email(r.get(USERS.EMAIL))
@@ -94,32 +96,6 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
                         .build())
                 .build());
     }
-
-//    @Override
-//    public Optional<UsersDto> findByEmailWithRole(String email) {
-//        SelectField<?>[] selectFields = new SelectField<?>[]{
-//                USERS.USER_ID,
-//                USERS.EMAIL,
-//                USERS.PASSWORD,
-//                ROLES.ROLE_ID,
-//                ROLES.NAME,
-//        };
-//        UsersDto result = dsl.select(selectFields)
-//                .from(USERS)
-//                .join(ROLES).on(USERS.ROLE_ID.eq(ROLES.ROLE_ID))
-//                .where(USERS.EMAIL.eq(email))
-//                .fetchOneInto(UsersDto.class);
-//        log.info("result : {}", result);
-//        return Optional.ofNullable(result).map(l -> UsersDto.builder()
-//                .userId(l.getUserId())
-//                .password(l.getPassword())
-//                .email(l.getEmail())
-//                .roles(RolesDto.builder()
-//                        .roleId(l.getRoles().getRoleId())
-//                        .name(l.getRoles().getName())
-//                        .build())
-//                .build());
-//    }
 
     @Override
     public Page<UsersDto> findAllUsersDetailsByParams(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable) {
@@ -134,17 +110,18 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
                 USERS.PHONE,
                 ROLES.NAME
         };
+        // dynamic orderBy method
+        OrderField<?>[] orderByFields = buildOrderBy(pageable);
 
         Result<Record> result = dsl.select(selectFields)
                 .from(USERS)
                 .leftJoin(ROLES).on(USERS.ROLE_ID.eq(ROLES.ROLE_ID))
                 .where(eq(USERS.NAME, usersSearchParamsDto.getName())
                         .or(eq(USERS.BIRTH, usersSearchParamsDto.getBirth())))
-                .orderBy(USERS.USER_ID)
+                .orderBy(orderByFields)
                 .limit(pageable.getPageSize())
                 .offset((int) pageable.getOffset())
                 .fetch();
-
 
         List<UsersDto> users = result.stream()
                 .map(record -> UsersDto.builder()
@@ -170,7 +147,49 @@ public class UsersRepositoryImpl implements UsersRepositoryCustom {
                 )
                 .fetchOne(0, Integer.class);
         count = (count != null) ? count : 0;
-
         return new PageImpl<>(users, pageable, count);
     }
+    private OrderField<?>[] buildOrderBy(Pageable pageable) {
+        if (pageable.getSort().isUnsorted()) {
+            return new OrderField<?>[]{USERS.USER_ID.asc()};
+        }
+
+        List<OrderField<?>> orderFields = new ArrayList<>();
+        pageable.getSort().forEach(order -> {
+            Field<?> field;
+            switch (order.getProperty()) {
+                case "email":
+                    field = USERS.EMAIL;
+                    break;
+                case "name":
+                    field = USERS.NAME;
+                    break;
+                case "birth":
+                    field = USERS.BIRTH;
+                    break;
+                case "gender":
+                    field = USERS.GENDER;
+                    break;
+                case "status":
+                    field = USERS.STATUS;
+                    break;
+                case "mobileCarrier":
+                    field = USERS.MOBILE_CARRIER;
+                    break;
+                case "phone":
+                    field = USERS.PHONE;
+                    break;
+                case "roleName":
+                    field = ROLES.NAME;
+                    break;
+                default:
+                    field = USERS.USER_ID;
+            }
+
+            orderFields.add(order.isAscending() ? field.asc() : field.desc());
+        });
+
+        return orderFields.toArray(new OrderField<?>[0]);
+    }
+
 }

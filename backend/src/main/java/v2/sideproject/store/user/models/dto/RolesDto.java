@@ -13,6 +13,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
+@ToString
 public class RolesDto implements Serializable {
     private String roleId;
     private RolesName name;

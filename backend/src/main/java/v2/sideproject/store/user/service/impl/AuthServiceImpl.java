@@ -139,7 +139,7 @@ public class AuthServiceImpl implements AuthService {
     public UsersInfoResponse getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = customUserDetails.loadUserByUsername(authentication.getName());
-        var usersInfo = usersRepositoryCustom.findByEmail(userDetails.getUsername())
+        var usersInfo = usersRepositoryCustom.findByEmailWithRole(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
         String checkToken = redisTemplate.opsForValue().get(usersInfo.getEmail());

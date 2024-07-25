@@ -102,8 +102,8 @@ jooq {
                         }
                     }
                     generate {
-                        daos = false // not my style..
-                        records = true
+                        daos = false
+                        records = false
                         fluentSetters = true
                         javaTimeTypes = true
                         deprecated = false
