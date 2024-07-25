@@ -12,13 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import v2.sideproject.store.user.enums.*;
+import v2.sideproject.store.user.models.dto.RolesDto;
 import v2.sideproject.store.user.models.request.AddressesRequest;
-import v2.sideproject.store.user.models.response.UsersRegisterResponse;
-import v2.sideproject.store.user.entity.Roles;
-import v2.sideproject.store.user.entity.Users;
-import v2.sideproject.store.user.mapper.UsersMapper;
-import v2.sideproject.store.user.repository.jpa.RolesRepository;
-import v2.sideproject.store.user.repository.jpa.UsersRepository;
+import v2.sideproject.store.user.repository.jooq.RolesRepository;
+import v2.sideproject.store.user.repository.jooq.UsersRepository;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
 import v2.sideproject.store.user.models.request.UsersRegisterRequest;
 
@@ -44,10 +41,9 @@ public class UsersServiceTest {
     @InjectMocks
     private UsersServiceImpl usersService;
 
-    private Users users;
     private UsersRegisterRequest usersRegisterRequest;
     private AddressesRequest addressesRequest;
-    private Roles roles;
+    private RolesDto roles;
 
     @BeforeEach
     void setup() {
@@ -70,7 +66,7 @@ public class UsersServiceTest {
                 .phone("000-0000-0000")
                 .address(addressesRequest)
                 .build();
-        roles = Roles.builder()
+        roles = RolesDto.builder()
                 .roleId("3")
                 .name(RolesName.CUSTOMER)
                 .build();
@@ -79,30 +75,18 @@ public class UsersServiceTest {
     @DisplayName("JUnit test for saveUsers method")
     @Test
     void givenSavedUser_whenOccurCreateService_thenReturnValue() {
-        var usersDetailsResponseDto = UsersRegisterResponse.builder()
-                .email(usersRegisterRequest.getEmail())
-                .password(usersRegisterRequest.getPassword())
-                .name(usersRegisterRequest.getName())
-                .birth(usersRegisterRequest.getBirth())
-                .gender(usersRegisterRequest.getGender())
-                .status(usersRegisterRequest.getStatus())
-                .mobileCarrier(usersRegisterRequest.getMobileCarrier())
-                .phone(usersRegisterRequest.getPhone())
-                .build();
-
-        users = UsersMapper.mapToUsersDetailsResponseDto(usersDetailsResponseDto, roles);
 
         // given
         given(rolesRepository.findByName(RolesName.CUSTOMER))
                 .willReturn(Optional.of(roles));
 
-        given(usersRepository.save(any(Users.class)))
-                .willReturn(users);
+        given(usersRepository.saveUsers(any(UsersRegisterRequest.class), any(RolesDto.class)))
+                .willReturn(1L);
 
         // when
         usersService.createUsers(usersRegisterRequest);
 
         // then
-        verify(usersRepository, times(1)).save(any(Users.class));
+        verify(usersRepository, times(1)).saveUsers(any(UsersRegisterRequest.class), any(RolesDto.class));
     }
 }

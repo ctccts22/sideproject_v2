@@ -14,18 +14,11 @@ import v2.sideproject.store.exception.UsersAlreadyExistsException;
 import v2.sideproject.store.redis.config.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
 import v2.sideproject.store.user.models.dto.UsersDto;
-import v2.sideproject.store.user.models.response.AddressesResponse;
 import v2.sideproject.store.user.models.response.UsersDetailsResponse;
-import v2.sideproject.store.user.models.response.UsersRegisterResponse;
 import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
-import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.RolesName;
-import v2.sideproject.store.user.enums.UsersStatus;
-import v2.sideproject.store.user.mapper.AddressesMapper;
-import v2.sideproject.store.user.mapper.UsersMapper;
-import v2.sideproject.store.user.repository.jpa.RolesRepository;
-import v2.sideproject.store.user.repository.jpa.UsersRepository;
-import v2.sideproject.store.user.repository.jooq.UsersRepositoryCustom;
+import v2.sideproject.store.user.repository.jooq.RolesRepository;
+import v2.sideproject.store.user.repository.jooq.UsersRepository;
 import v2.sideproject.store.user.service.UsersService;
 import v2.sideproject.store.user.models.request.UsersRegisterRequest;
 
@@ -37,7 +30,6 @@ import java.util.Optional;
 @Slf4j
 public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
-    private final UsersRepositoryCustom usersRepositoryCustom;
     private final PasswordEncoder passwordEncoder;
     private final RolesRepository rolesRepository;
 
@@ -46,45 +38,20 @@ public class UsersServiceImpl implements UsersService {
     public void createUsers(UsersRegisterRequest usersRegisterRequest) {
         checkPassword(usersRegisterRequest);
         checkDuplicatedEmail(usersRegisterRequest);
-        // response
-        var checkUserDto = UsersRegisterResponse.builder()
-                .email(usersRegisterRequest.getEmail())
-                .password(passwordEncoder.encode(usersRegisterRequest.getPassword()))
-                .name(usersRegisterRequest.getName())
-                .birth(usersRegisterRequest.getBirth())
-                .gender(usersRegisterRequest.getGender())
-                .status(UsersStatus.PENDING)
-                .mobileCarrier(usersRegisterRequest.getMobileCarrier())
-                .phone(usersRegisterRequest.getPhone())
-                .build();
 
         var roles = rolesRepository.findByName(RolesName.CUSTOMER)
                 .orElseThrow(() -> new IllegalStateException("Default role not found"));
 
-        var users = UsersMapper.mapToUsersDetailsResponseDto(checkUserDto, roles);
-        log.info("user : {} ", users.toString());
+        Long saveUsers = usersRepository.saveUsers(usersRegisterRequest, roles);
 
-//        Long vaa = usersRepositoryCustom.saveUsers(checkUserDto, roles);
-
-        var savedUsers = usersRepository.save(users);
-
-
-        AddressesResponse addressesResponse = AddressesResponse.builder()
-                .userId(savedUsers.getUserId())
-                .mainAddress(usersRegisterRequest.getAddress().getMainAddress())
-                .subAddress(usersRegisterRequest.getAddress().getSubAddress())
-                .zipCode(usersRegisterRequest.getAddress().getZipCode())
-                .phone(usersRegisterRequest.getAddress().getPhone())
-                .build();
-
-        AddressesMapper.mapToAddresses(addressesResponse);
     }
 
     @Override
     @Cacheable(value = "fetchAllUserByParams", keyGenerator = "customKeyGenerator")
+    @Transactional(readOnly = true)
     public RestPage<UsersDetailsResponse> fetchAllUsersDetails(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable) {
 
-        Page<UsersDto> usersDetailsByParams = usersRepositoryCustom.findAllUsersDetailsByParams(usersSearchParamsDto, pageable);
+        Page<UsersDto> usersDetailsByParams = usersRepository.findAllUsersDetailsByParams(usersSearchParamsDto, pageable);
 
         List<UsersDetailsResponse> usersDetailsResponseList = usersDetailsByParams.getContent()
                 .stream()
@@ -107,7 +74,7 @@ public class UsersServiceImpl implements UsersService {
 
 
     private void checkDuplicatedEmail(UsersRegisterRequest usersRegisterRequest) {
-        Optional<UsersDto> checkDuplicated = usersRepositoryCustom.findByEmail(usersRegisterRequest.getEmail());
+        Optional<UsersDto> checkDuplicated = usersRepository.findByEmail(usersRegisterRequest.getEmail());
         if (checkDuplicated.isPresent()) {
             throw new UsersAlreadyExistsException(UsersConstants.DUPLICATED_EMAIL);
         }

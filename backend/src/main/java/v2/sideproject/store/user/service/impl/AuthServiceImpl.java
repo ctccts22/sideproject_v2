@@ -3,7 +3,6 @@ package v2.sideproject.store.user.service.impl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,11 +14,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import v2.sideproject.store.jwt.JwtTokenProvider;
 import v2.sideproject.store.user.constants.AuthConstants;
 import v2.sideproject.store.user.models.request.UsersLoginRequest;
-import v2.sideproject.store.user.repository.jooq.UsersRepositoryCustom;
-import v2.sideproject.store.user.repository.jpa.UsersRepository;
+import v2.sideproject.store.user.repository.jooq.UsersRepository;
 import v2.sideproject.store.user.service.AuthService;
 import v2.sideproject.store.user.userDetails.CustomUserDetails;
 import v2.sideproject.store.user.models.response.UsersInfoResponse;
@@ -37,16 +36,15 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
-    private final UsersRepository usersRepository;
     private final CustomUserDetails customUserDetails;
-    private final UsersRepositoryCustom usersRepositoryCustom;
+    private final UsersRepository usersRepository;
 
 
     @Override
     @Transactional
     public void login(UsersLoginRequest usersLoginRequest, HttpServletResponse response) {
 
-        usersRepositoryCustom.findByEmail(usersLoginRequest.getEmail())
+        usersRepository.findByEmail(usersLoginRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(AuthConstants.MESSAGE_404));
 
         Authentication authentication;
@@ -102,7 +100,7 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = customUserDetails.loadUserByUsername(authentication.getName());
 
-        var usersInfo = usersRepositoryCustom.findByEmail(userDetails.getUsername())
+        var usersInfo = usersRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
         String checkToken = redisTemplate.opsForValue().get(usersInfo.getEmail());
@@ -139,7 +137,7 @@ public class AuthServiceImpl implements AuthService {
     public UsersInfoResponse getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = customUserDetails.loadUserByUsername(authentication.getName());
-        var usersInfo = usersRepositoryCustom.findByEmailWithRole(userDetails.getUsername())
+        var usersInfo = usersRepository.findByEmailWithRole(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
         String checkToken = redisTemplate.opsForValue().get(usersInfo.getEmail());

@@ -6,6 +6,7 @@ import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +29,9 @@ public class UsersDto {
     private UsersStatus status;
     private MobileCarrier mobileCarrier;
     private String phone;
+    private String createdAt;
+    private String updatedAt;
+    private String deletedAt;
     private RolesDto roles;
     private List<AddressesDto> addressesList = new ArrayList<>();
 

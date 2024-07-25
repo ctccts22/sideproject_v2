@@ -14,8 +14,6 @@ import v2.sideproject.store.user.constants.UsersConstants;
 import v2.sideproject.store.user.controller.UsersController;
 import v2.sideproject.store.user.enums.AddressesType;
 import v2.sideproject.store.user.models.request.AddressesRequest;
-import v2.sideproject.store.user.entity.Roles;
-import v2.sideproject.store.user.entity.Users;
 import v2.sideproject.store.user.enums.Gender;
 import v2.sideproject.store.user.enums.MobileCarrier;
 import v2.sideproject.store.user.enums.UsersStatus;
@@ -43,11 +41,9 @@ public class UsersControllerTest {
     @MockBean
     private UsersServiceImpl usersService;
 
-    private Users users;
     private UsersRegisterRequest usersRegisterRequest;
     private UsersStatusResponse usersStatusResponse;
     private AddressesRequest addressesRequest;
-    private Roles roles;
 
     @BeforeEach
     void setup() {
