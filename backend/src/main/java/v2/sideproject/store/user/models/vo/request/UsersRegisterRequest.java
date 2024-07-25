@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.models.request;
+package v2.sideproject.store.user.models.vo.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -7,9 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import v2.sideproject.store.user.enums.Gender;
-import v2.sideproject.store.user.enums.MobileCarrier;
-import v2.sideproject.store.user.enums.UsersStatus;
+import v2.sideproject.store.user.models.enums.Gender;
+import v2.sideproject.store.user.models.enums.MobileCarrier;
+import v2.sideproject.store.user.models.enums.UsersStatus;
 
 @Schema(
         name = "UsersDetailsRequest",

@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import v2.sideproject.store.user.models.dto.UsersDto;
-import v2.sideproject.store.user.repository.jooq.UsersRepository;
+import v2.sideproject.store.user.repository.UsersRepository;
 
 @RequiredArgsConstructor
 @Service

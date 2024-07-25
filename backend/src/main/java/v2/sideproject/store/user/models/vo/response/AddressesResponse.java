@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.models.response;
+package v2.sideproject.store.user.models.vo.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import v2.sideproject.store.user.enums.AddressesType;
+import v2.sideproject.store.user.models.enums.AddressesType;
 
 
 @Schema(

@@ -17,11 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.error.ErrorResponseDto;
-import v2.sideproject.store.redis.config.RestPage;
+import v2.sideproject.store.redis.utils.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
-import v2.sideproject.store.user.models.request.UsersRegisterRequest;
-import v2.sideproject.store.user.models.response.UsersDetailsResponse;
-import v2.sideproject.store.user.models.response.UsersStatusResponse;
+import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
+import v2.sideproject.store.user.models.vo.response.UsersDetailsResponse;
+import v2.sideproject.store.user.models.vo.response.UsersStatusResponse;
 import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.service.UsersService;
 

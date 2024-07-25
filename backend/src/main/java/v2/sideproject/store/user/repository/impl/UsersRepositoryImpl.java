@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.repository.jooq.impl;
+package v2.sideproject.store.user.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,12 +7,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import v2.sideproject.store.converter.DateFormatter;
+import v2.sideproject.store.utils.converter.DateFormatter;
 import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.models.dto.RolesDto;
 import v2.sideproject.store.user.models.dto.UsersDto;
-import v2.sideproject.store.user.models.request.UsersRegisterRequest;
-import v2.sideproject.store.user.repository.jooq.UsersRepository;
+import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
+import v2.sideproject.store.user.repository.UsersRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

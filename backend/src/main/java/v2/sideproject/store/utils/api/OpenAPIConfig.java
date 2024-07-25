@@ -1,4 +1,4 @@
-package v2.sideproject.store.api;
+package v2.sideproject.store.utils.api;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

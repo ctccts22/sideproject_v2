@@ -1,6 +1,6 @@
-package v2.sideproject.store.user.repository.jooq;
+package v2.sideproject.store.user.repository;
 
-import v2.sideproject.store.user.enums.RolesName;
+import v2.sideproject.store.user.models.enums.RolesName;
 import v2.sideproject.store.user.models.dto.RolesDto;
 
 import java.util.Optional;

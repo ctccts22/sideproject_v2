@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.models.request;
+package v2.sideproject.store.user.models.vo.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;

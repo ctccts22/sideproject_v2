@@ -1,4 +1,4 @@
-package v2.sideproject.store.comm.order.enums;
+package v2.sideproject.store.core.order.enums;
 
 public enum OrderStatus {
     PENDING,        // Order has been created but not yet processed

@@ -1,7 +1,7 @@
 package v2.sideproject.store.user.models.dto;
 
 import lombok.*;
-import v2.sideproject.store.user.enums.AddressesType;
+import v2.sideproject.store.user.models.enums.AddressesType;
 
 import java.io.Serializable;
 
@@ -9,6 +9,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @Getter
+@ToString
 public class AddressesDto implements Serializable {
     private Long addressesId;
     private UsersDto usersDto;

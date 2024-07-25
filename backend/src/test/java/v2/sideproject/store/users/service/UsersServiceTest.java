@@ -13,11 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import v2.sideproject.store.user.enums.*;
 import v2.sideproject.store.user.models.dto.RolesDto;
-import v2.sideproject.store.user.models.request.AddressesRequest;
-import v2.sideproject.store.user.repository.jooq.RolesRepository;
-import v2.sideproject.store.user.repository.jooq.UsersRepository;
+import v2.sideproject.store.user.models.enums.*;
+import v2.sideproject.store.user.models.vo.request.AddressesRequest;
+import v2.sideproject.store.user.repository.RolesRepository;
+import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
-import v2.sideproject.store.user.models.request.UsersRegisterRequest;
+import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
 
 import java.util.Optional;
 

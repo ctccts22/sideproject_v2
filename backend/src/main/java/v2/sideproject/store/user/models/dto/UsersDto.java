@@ -1,25 +1,21 @@
 package v2.sideproject.store.user.models.dto;
 
 import lombok.*;
-import org.jooq.RecordMapper;
-import v2.sideproject.store.user.enums.Gender;
-import v2.sideproject.store.user.enums.MobileCarrier;
-import v2.sideproject.store.user.enums.UsersStatus;
+import v2.sideproject.store.user.models.enums.Gender;
+import v2.sideproject.store.user.models.enums.MobileCarrier;
+import v2.sideproject.store.user.models.enums.UsersStatus;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
-@Setter
 @ToString
-public class UsersDto {
+public class UsersDto implements Serializable {
     private Long userId;
     private String email;
     private String password;

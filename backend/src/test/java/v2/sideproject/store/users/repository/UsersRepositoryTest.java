@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.jooq.JooqTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import v2.sideproject.store.tables.Roles;
-import v2.sideproject.store.user.enums.RolesName;
+import v2.sideproject.store.user.models.enums.RolesName;
 import v2.sideproject.store.user.models.dto.RolesDto;
 import v2.sideproject.store.user.models.dto.UsersDto;
 

@@ -1,4 +1,4 @@
-package v2.sideproject.store.user.enums;
+package v2.sideproject.store.user.models.enums;
 
 public enum AddressesType {
     HOME,

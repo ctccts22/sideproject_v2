@@ -17,10 +17,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.user.constants.AuthConstants;
-import v2.sideproject.store.user.models.request.UsersLoginRequest;
+import v2.sideproject.store.user.models.vo.request.UsersLoginRequest;
 import v2.sideproject.store.user.service.AuthService;
-import v2.sideproject.store.user.models.response.UsersInfoResponse;
-import v2.sideproject.store.user.models.response.UsersStatusResponse;
+import v2.sideproject.store.user.models.vo.response.UsersInfoResponse;
+import v2.sideproject.store.user.models.vo.response.UsersStatusResponse;
 
 
 @RequestMapping(path = "/api/auth", produces = {MediaType.APPLICATION_JSON_VALUE})

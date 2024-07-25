@@ -12,14 +12,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import v2.sideproject.store.user.constants.UsersConstants;
 import v2.sideproject.store.user.controller.UsersController;
-import v2.sideproject.store.user.enums.AddressesType;
-import v2.sideproject.store.user.models.request.AddressesRequest;
-import v2.sideproject.store.user.enums.Gender;
-import v2.sideproject.store.user.enums.MobileCarrier;
-import v2.sideproject.store.user.enums.UsersStatus;
+import v2.sideproject.store.user.models.enums.AddressesType;
+import v2.sideproject.store.user.models.vo.request.AddressesRequest;
+import v2.sideproject.store.user.models.enums.Gender;
+import v2.sideproject.store.user.models.enums.MobileCarrier;
+import v2.sideproject.store.user.models.enums.UsersStatus;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
-import v2.sideproject.store.user.models.request.UsersRegisterRequest;
-import v2.sideproject.store.user.models.response.UsersStatusResponse;
+import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
+import v2.sideproject.store.user.models.vo.response.UsersStatusResponse;
 import v2.sideproject.store.users.security.WithMockCustomUser;
 
 

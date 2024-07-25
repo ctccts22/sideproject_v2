@@ -1,4 +1,4 @@
-package v2.sideproject.store.redis.config;
+package v2.sideproject.store.redis.utils;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
