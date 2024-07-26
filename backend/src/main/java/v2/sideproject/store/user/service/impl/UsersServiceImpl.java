@@ -22,6 +22,7 @@ import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.UsersService;
 import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +52,6 @@ public class UsersServiceImpl implements UsersService {
     @Cacheable(value = "fetchAllUserByParams", keyGenerator = "customKeyGenerator")
     @Transactional(readOnly = true)
     public RestPage<UsersDetailsResponse> fetchAllUsersDetails(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable) {
-
         Page<UsersDto> usersDetailsByParams = usersRepository.findAllUsersDetailsByParams(usersSearchParamsDto, pageable);
 
         List<UsersDetailsResponse> usersDetailsResponseList = usersDetailsByParams.getContent()

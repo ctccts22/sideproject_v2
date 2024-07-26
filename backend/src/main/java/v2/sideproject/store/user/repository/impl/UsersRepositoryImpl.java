@@ -119,9 +119,13 @@ public class UsersRepositoryImpl implements UsersRepository {
                 .from(USERS)
                 .leftJoin(ROLES).on(USERS.ROLE_ID.eq(ROLES.ROLE_ID))
                 .where(
-                        eqIfNotBlank(USERS.NAME, usersSearchParamsDto.getName())
-                                .or(eqIfNotBlank(USERS.BIRTH, usersSearchParamsDto.getBirth()))
-                )
+                        eqIfNotBlank(USERS.EMAIL, usersSearchParamsDto.getEmail())
+                                .or(eqIfNotBlank(USERS.NAME, usersSearchParamsDto.getName())
+                                        .or(eqIfNotBlank(USERS.BIRTH, usersSearchParamsDto.getBirth()))
+                                        .or(eqIfNotBlank(USERS.GENDER, String.valueOf(usersSearchParamsDto.getGender())))
+                                        .or(eqIfNotBlank(USERS.STATUS, String.valueOf(usersSearchParamsDto.getStatus())))
+                                        .or(eqIfNotBlank(ROLES.NAME, String.valueOf(usersSearchParamsDto.getRolesName())))
+                                ))
                 .orderBy(orderByFields)
                 .limit(pageable.getPageSize())
                 .offset((int) pageable.getOffset())
@@ -131,9 +135,13 @@ public class UsersRepositoryImpl implements UsersRepository {
                 .from(USERS)
                 .leftJoin(ROLES).on(USERS.ROLE_ID.eq(ROLES.ROLE_ID))
                 .where(
-                        eqIfNotBlank(USERS.NAME, usersSearchParamsDto.getName())
-                                .or(eqIfNotBlank(USERS.BIRTH, usersSearchParamsDto.getBirth()))
-                )
+                        eqIfNotBlank(USERS.EMAIL, usersSearchParamsDto.getEmail())
+                                .or(eqIfNotBlank(USERS.NAME, usersSearchParamsDto.getName())
+                                        .or(eqIfNotBlank(USERS.BIRTH, usersSearchParamsDto.getBirth()))
+                                        .or(eqIfNotBlank(USERS.GENDER, String.valueOf(usersSearchParamsDto.getGender())))
+                                        .or(eqIfNotBlank(USERS.STATUS, String.valueOf(usersSearchParamsDto.getStatus())))
+                                        .or(eqIfNotBlank(ROLES.NAME, String.valueOf(usersSearchParamsDto.getRolesName())))
+                                ))
                 .fetchOne(0, Integer.class);
 
         count = (count != null) ? count : 0;
