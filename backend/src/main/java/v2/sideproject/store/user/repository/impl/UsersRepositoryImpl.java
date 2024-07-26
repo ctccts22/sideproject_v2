@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static v2.sideproject.store.jooq.JooqStringConditionUtils.*;
+import static v2.sideproject.store.jooq.utils.JooqStringConditionUtils.*;
 import static v2.sideproject.store.tables.Addresses.*;
 import static v2.sideproject.store.tables.Roles.*;
 import static v2.sideproject.store.tables.Users.USERS;
@@ -31,7 +31,7 @@ public class UsersRepositoryImpl implements UsersRepository {
     private final DSLContext dsl;
 
     @Override
-    public int saveAddresses(UsersRegisterRequest usersRegisterRequest, Long saveUsers) {
+    public int saveAddresses(UsersRegisterRequest usersRegisterRequest, Long userId) {
         return dsl.insertInto(ADDRESSES)
                 .columns(
                         ADDRESSES.MAIN_ADDRESS,
@@ -44,13 +44,13 @@ public class UsersRepositoryImpl implements UsersRepository {
                         usersRegisterRequest.getAddress().getSubAddress(),
                         usersRegisterRequest.getAddress().getZipCode(),
                         String.valueOf(usersRegisterRequest.getAddress().getAddressesType()),
-                        saveUsers
+                        userId
                 ).execute();
     }
 
 
     @Override
-    public Long saveUsers(UsersRegisterRequest usersRegisterRequest, RolesDto rolesDto) {
+    public Long saveUsers(UsersRegisterRequest usersRegisterRequest, String encodedPassword, RolesDto rolesDto) {
         String formattedCreatedAt = DateFormatter.format(LocalDateTime.now());
 
         return dsl.insertInto(USERS)
@@ -68,7 +68,7 @@ public class UsersRepositoryImpl implements UsersRepository {
                 )
                 .values(
                         usersRegisterRequest.getEmail(),
-                        usersRegisterRequest.getPassword(),
+                        encodedPassword,
                         usersRegisterRequest.getName(),
                         usersRegisterRequest.getBirth(),
                         String.valueOf(usersRegisterRequest.getGender()),

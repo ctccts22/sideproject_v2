@@ -1,11 +1,10 @@
-package v2.sideproject.store.users.security;
+package v2.sideproject.store.security;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
-import v2.sideproject.store.jwt.JwtTokenProvider;
 
 import java.util.Collections;
 

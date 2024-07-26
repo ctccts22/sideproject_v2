@@ -1,4 +1,4 @@
-package v2.sideproject.store.jooq;
+package v2.sideproject.store.jooq.utils;
 
 import org.jooq.Condition;
 import org.jooq.Field;

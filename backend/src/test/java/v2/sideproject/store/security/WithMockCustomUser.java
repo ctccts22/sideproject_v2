@@ -1,4 +1,4 @@
-package v2.sideproject.store.users.security;
+package v2.sideproject.store.security;
 
 import org.springframework.security.test.context.support.WithSecurityContext;
 

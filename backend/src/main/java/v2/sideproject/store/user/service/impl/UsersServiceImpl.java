@@ -30,8 +30,8 @@ import java.util.Optional;
 @Slf4j
 public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
-    private final PasswordEncoder passwordEncoder;
     private final RolesRepository rolesRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -42,9 +42,9 @@ public class UsersServiceImpl implements UsersService {
         var roles = rolesRepository.findByName(RolesName.CUSTOMER)
                 .orElseThrow(() -> new IllegalStateException("Default role not found"));
 
-        Long saveUsers = usersRepository.saveUsers(usersRegisterRequest, roles);
-        int saveAddresses = usersRepository.saveAddresses(usersRegisterRequest, saveUsers);
-
+        String encodedPassword = passwordEncoder.encode(usersRegisterRequest.getPassword());
+        Long userId = usersRepository.saveUsers(usersRegisterRequest, encodedPassword, roles);
+        usersRepository.saveAddresses(usersRegisterRequest, userId);
     }
 
     @Override

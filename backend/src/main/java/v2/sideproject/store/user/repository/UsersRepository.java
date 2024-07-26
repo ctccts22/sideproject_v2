@@ -10,7 +10,7 @@ import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
 import java.util.Optional;
 
 public interface UsersRepository {
-    Long saveUsers(UsersRegisterRequest usersRegisterRequest, RolesDto rolesDto);
+    Long saveUsers(UsersRegisterRequest usersRegisterRequest, String encodedPassword, RolesDto rolesDto);
 
     Optional<UsersDto> findByEmail(String email);
 
@@ -18,6 +18,6 @@ public interface UsersRepository {
 
     Page<UsersDto> findAllUsersDetailsByParams(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable);
 
-    int saveAddresses(UsersRegisterRequest usersRegisterRequest, Long saveUsers);
+    int saveAddresses(UsersRegisterRequest usersRegisterRequest, Long userId);
 
 }

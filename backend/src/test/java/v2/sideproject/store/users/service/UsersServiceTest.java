@@ -1,8 +1,6 @@
 package v2.sideproject.store.users.service;
 
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import v2.sideproject.store.user.enums.*;
 import v2.sideproject.store.user.models.dto.RolesDto;
 import v2.sideproject.store.user.models.enums.*;
 import v2.sideproject.store.user.models.vo.request.AddressesRequest;
@@ -26,9 +23,6 @@ import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UsersServiceTest {
-
-    @PersistenceContext
-    private EntityManager em;
 
     @Mock
     private UsersRepository usersRepository;
@@ -52,7 +46,6 @@ public class UsersServiceTest {
                 .mainAddress("관악구 봉천동")
                 .subAddress("303호")
                 .zipCode("90045")
-                .phone("000-000-0000")
                 .addressesType(AddressesType.HOME)
                 .build();
         usersRegisterRequest = UsersRegisterRequest.builder()
@@ -81,13 +74,13 @@ public class UsersServiceTest {
         given(rolesRepository.findByName(RolesName.CUSTOMER))
                 .willReturn(Optional.of(roles));
 
-        given(usersRepository.saveUsers(any(UsersRegisterRequest.class), any(RolesDto.class)))
+        given(usersRepository.saveUsers(any(UsersRegisterRequest.class), any(String.class), any(RolesDto.class)))
                 .willReturn(1L);
 
         // when
         usersService.createUsers(usersRegisterRequest);
 
         // then
-        verify(usersRepository, times(1)).saveUsers(any(UsersRegisterRequest.class), any(RolesDto.class));
+        verify(usersRepository, times(1)).saveUsers(any(UsersRegisterRequest.class), any(String.class), any(RolesDto.class));
     }
 }

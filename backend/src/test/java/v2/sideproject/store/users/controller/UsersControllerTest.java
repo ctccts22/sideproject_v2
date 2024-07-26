@@ -20,7 +20,7 @@ import v2.sideproject.store.user.models.enums.UsersStatus;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
 import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
 import v2.sideproject.store.user.models.vo.response.UsersStatusResponse;
-import v2.sideproject.store.users.security.WithMockCustomUser;
+import v2.sideproject.store.security.WithMockCustomUser;
 
 
 import static org.mockito.BDDMockito.*;
@@ -51,7 +51,6 @@ public class UsersControllerTest {
                 .mainAddress("관악구 봉천동")
                 .subAddress("303호")
                 .zipCode("90045")
-                .phone("000-000-0000")
                 .addressesType(AddressesType.HOME)
                 .build();
         usersRegisterRequest = UsersRegisterRequest.builder()
