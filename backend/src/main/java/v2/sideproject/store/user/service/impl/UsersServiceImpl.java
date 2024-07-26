@@ -43,6 +43,7 @@ public class UsersServiceImpl implements UsersService {
                 .orElseThrow(() -> new IllegalStateException("Default role not found"));
 
         Long saveUsers = usersRepository.saveUsers(usersRegisterRequest, roles);
+        int saveAddresses = usersRepository.saveAddresses(usersRegisterRequest, saveUsers);
 
     }
 

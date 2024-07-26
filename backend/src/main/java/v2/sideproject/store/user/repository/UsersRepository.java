@@ -18,4 +18,6 @@ public interface UsersRepository {
 
     Page<UsersDto> findAllUsersDetailsByParams(UsersSearchParamsDto usersSearchParamsDto, Pageable pageable);
 
+    int saveAddresses(UsersRegisterRequest usersRegisterRequest, Long saveUsers);
+
 }

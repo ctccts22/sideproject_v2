@@ -21,9 +21,6 @@ public class AddressesRequest {
     @NotEmpty(message = "subAddress cannot be null or empty")
     @Schema(description = "User's subAddress", example = "104동")
     private String subAddress;
-    @NotEmpty(message = "phone cannot be null or empty")
-    @Schema(description = "User's phone", example = "010-1111-1111")
-    private String phone;
     @NotEmpty(message = "zipCode cannot be null or empty")
     @Schema(description = "User's zipCode", example = "90045")
     private String zipCode;

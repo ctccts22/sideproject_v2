@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static v2.sideproject.store.jooq.JooqStringConditionUtils.*;
+import static v2.sideproject.store.tables.Addresses.*;
 import static v2.sideproject.store.tables.Roles.*;
 import static v2.sideproject.store.tables.Users.USERS;
 
@@ -28,6 +29,25 @@ import static v2.sideproject.store.tables.Users.USERS;
 @Slf4j
 public class UsersRepositoryImpl implements UsersRepository {
     private final DSLContext dsl;
+
+    @Override
+    public int saveAddresses(UsersRegisterRequest usersRegisterRequest, Long saveUsers) {
+        return dsl.insertInto(ADDRESSES)
+                .columns(
+                        ADDRESSES.MAIN_ADDRESS,
+                        ADDRESSES.SUB_ADDRESS,
+                        ADDRESSES.ZIP_CODE,
+                        ADDRESSES.ADDRESS_TYPE,
+                        ADDRESSES.USER_ID
+                ).values(
+                        usersRegisterRequest.getAddress().getMainAddress(),
+                        usersRegisterRequest.getAddress().getSubAddress(),
+                        usersRegisterRequest.getAddress().getZipCode(),
+                        String.valueOf(usersRegisterRequest.getAddress().getAddressesType()),
+                        saveUsers
+                ).execute();
+    }
+
 
     @Override
     public Long saveUsers(UsersRegisterRequest usersRegisterRequest, RolesDto rolesDto) {

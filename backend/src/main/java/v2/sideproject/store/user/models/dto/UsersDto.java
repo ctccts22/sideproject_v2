@@ -5,7 +5,6 @@ import v2.sideproject.store.user.models.enums.Gender;
 import v2.sideproject.store.user.models.enums.MobileCarrier;
 import v2.sideproject.store.user.models.enums.UsersStatus;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,12 @@ import java.util.List;
 @Builder
 @Getter
 @ToString
-public class UsersDto implements Serializable {
+public class UsersDto {
+//    public class UsersDto implements Serializable {
+    /**
+     * In a Spring boot, I really don't need to implement Serializable for my DTOs
+     * Cuz, Jackson handles JSON serializable and deserializable automatically throw @RequestBody.
+     */
     private Long userId;
     private String email;
     private String password;
@@ -28,7 +32,9 @@ public class UsersDto implements Serializable {
     private String createdAt;
     private String updatedAt;
     private String deletedAt;
+    // @ManyToOne
     private RolesDto roles;
-    private List<AddressesDto> addressesList = new ArrayList<>();
+    // @OneToMany
+    private List<AddressesDto> addressesList;
 
 }
