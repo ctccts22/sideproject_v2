@@ -65,11 +65,6 @@ public class AuthServiceTest {
     @InjectMocks
     private AuthServiceImpl authService;
 
-    @BeforeEach
-    void setup() {
-
-    }
-
     @Test
     void givenLoginRequestAndResponse_whenCreateToken_thenLoginSuccess() {
         UsersLoginRequest usersLoginRequest = UsersLoginRequest.builder()
@@ -79,18 +74,16 @@ public class AuthServiceTest {
 
         UsersDto mockUser = new UsersDto();
         Optional<UsersDto> optionalUser = Optional.of(mockUser);
-
-        when(usersRepository.findByEmail(usersLoginRequest.getEmail())).thenReturn(optionalUser);
+        given(usersRepository.findByEmail(usersLoginRequest.getEmail())).willReturn(optionalUser);
 
         Authentication authentication = mock(Authentication.class);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(authentication);
+        given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .willReturn(authentication);
 
         String accessToken = "accessToken";
         String refreshToken = "refreshToken";
-        when(jwtTokenProvider.createAccessToken(authentication)).thenReturn(accessToken);
-        when(jwtTokenProvider.createRefreshToken(authentication)).thenReturn(refreshToken);
-
+        given(jwtTokenProvider.createAccessToken(authentication)).willReturn(accessToken);
+        given(jwtTokenProvider.createRefreshToken(authentication)).willReturn(refreshToken);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
         // when
@@ -112,15 +105,15 @@ public class AuthServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         UserDetails userDetails = mock(UserDetails.class);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("testUser@test.com\"");
-        when(customUserDetails.loadUserByUsername("testUser@test.com\"")).thenReturn(userDetails);
-        when(userDetails.getUsername()).thenReturn("testUser@test.com\"");
+        given(securityContext.getAuthentication()).willReturn(authentication);
+        given(authentication.getName()).willReturn("testUser@test.com");
+        given(customUserDetails.loadUserByUsername("testUser@test.com")).willReturn(userDetails);
+        given(userDetails.getUsername()).willReturn("testUser@test.com");
 
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         Cookie refreshTokenCookie = new Cookie("refreshToken", "testRefreshToken");
-        when(request.getCookies()).thenReturn(new Cookie[]{refreshTokenCookie});
+        given(request.getCookies()).willReturn(new Cookie[]{refreshTokenCookie});
 
         doNothing().when(jwtTokenProvider).deleteRefreshTokenCookie(response, "refreshToken");
 
@@ -130,39 +123,39 @@ public class AuthServiceTest {
         // then
         verify(jwtTokenProvider).deleteRefreshTokenCookie(response, "refreshToken");
         verify(redisTemplate).delete("testRefreshToken");
-        verify(redisTemplate).delete("testUser@test.com\"");
+        verify(redisTemplate).delete("testUser@test.com");
     }
 
     @Test
     void givenRequest_whenGetAccessToken_thenReturnAccessToken() {
-        // Mock dependencies
+        // given
         Authentication authentication = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         UserDetails userDetails = mock(UserDetails.class);
         ValueOperations<String, String> valueOperations = mock(ValueOperations.class);
 
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("testUser@test.com");
-        when(customUserDetails.loadUserByUsername("testUser@test.com")).thenReturn(userDetails);
-        when(userDetails.getUsername()).thenReturn("testUser@test.com");
+        given(securityContext.getAuthentication()).willReturn(authentication);
+        given(authentication.getName()).willReturn("testUser@test.com");
+        given(customUserDetails.loadUserByUsername("testUser@test.com")).willReturn(userDetails);
+        given(userDetails.getUsername()).willReturn("testUser@test.com");
 
         UsersDto usersDto = UsersDto.builder().email(userDetails.getUsername()).build();
-        when(usersRepository.findByEmail("testUser@test.com")).thenReturn(Optional.of(usersDto));
-        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-        when(valueOperations.get("testUser@test.com")).thenReturn("testToken");
+        given(usersRepository.findByEmail("testUser@test.com")).willReturn(Optional.of(usersDto));
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(valueOperations.get("testUser@test.com")).willReturn("testToken");
 
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         Cookie refreshTokenCookie = new Cookie("refreshToken", "testRefreshToken");
-        when(request.getCookies()).thenReturn(new Cookie[]{refreshTokenCookie});
+        given(request.getCookies()).willReturn(new Cookie[]{refreshTokenCookie});
 
-        when(jwtTokenProvider.searchAccessTokenByRefreshToken("testRefreshToken")).thenReturn("accessToken");
+        given(jwtTokenProvider.searchAccessTokenByRefreshToken("testRefreshToken")).willReturn("accessToken");
 
-        // Call method
+        // when
         authService.getAccessToken(request, response);
 
-        // Verify interactions
+        // verify
         verify(usersRepository).findByEmail("testUser@test.com");
         verify(jwtTokenProvider).searchAccessTokenByRefreshToken("testRefreshToken");
         verify(response).setHeader("Authorization", "Bearer accessToken");
@@ -171,17 +164,17 @@ public class AuthServiceTest {
 
     @Test
     void givenAuthenticatedUser_whenGetUserInfo_thenReturnUserInfo() {
-        // Mock dependencies
+        // given
         Authentication authentication = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         UserDetails userDetails = mock(UserDetails.class);
         ValueOperations<String, String> valueOperations = mock(ValueOperations.class);
 
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("testUser@test.com");
-        when(customUserDetails.loadUserByUsername("testUser@test.com")).thenReturn(userDetails);
-        when(userDetails.getUsername()).thenReturn("testUser@test.com");
+        given(securityContext.getAuthentication()).willReturn(authentication);
+        given(authentication.getName()).willReturn("testUser@test.com");
+        given(customUserDetails.loadUserByUsername("testUser@test.com")).willReturn(userDetails);
+        given(userDetails.getUsername()).willReturn("testUser@test.com");
 
         RolesDto roles = RolesDto.builder().name(RolesName.CUSTOMER).build();
         UsersDto usersDto =
@@ -190,35 +183,35 @@ public class AuthServiceTest {
                         .roles(RolesDto.builder()
                                 .name(roles.getName())
                                 .build()).build();
-        when(usersRepository.findByEmailWithRole("testUser@test.com")).thenReturn(Optional.of(usersDto));
-        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-        when(valueOperations.get("testUser@test.com")).thenReturn("testToken");
+        given(usersRepository.findByEmailWithRole("testUser@test.com")).willReturn(Optional.of(usersDto));
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(valueOperations.get("testUser@test.com")).willReturn("testToken");
 
-        // Call method
+        // when
         UsersInfoResponse usersInfoResponse = authService.getUserInfo();
 
-        // Verify interactions
+        // verify
         verify(usersRepository).findByEmailWithRole("testUser@test.com");
         verify(redisTemplate.opsForValue()).get("testUser@test.com");
 
-        // Assert the response
+        // then
         assertEquals("testUser@test.com", usersInfoResponse.getEmail());
         assertEquals(RolesName.CUSTOMER, usersInfoResponse.getRoleName());
     }
 
     @Test
     void givenNoTokenInRedis_whenGetUserInfo_thenThrowException() {
-        // Mock dependencies
+        // given
         Authentication authentication = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         UserDetails userDetails = mock(UserDetails.class);
         ValueOperations<String, String> valueOperations = mock(ValueOperations.class);
 
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("testUser@test.com");
-        when(customUserDetails.loadUserByUsername("testUser@test.com")).thenReturn(userDetails);
-        when(userDetails.getUsername()).thenReturn("testUser@test.com");
+        given(securityContext.getAuthentication()).willReturn(authentication);
+        given(authentication.getName()).willReturn("testUser@test.com");
+        given(customUserDetails.loadUserByUsername("testUser@test.com")).willReturn(userDetails);
+        given(userDetails.getUsername()).willReturn("testUser@test.com");
 
         RolesDto roles = RolesDto.builder().name(RolesName.CUSTOMER).build();
         UsersDto usersDto =
@@ -227,17 +220,15 @@ public class AuthServiceTest {
                         .roles(RolesDto.builder()
                                 .name(roles.getName())
                                 .build()).build();
-        when(usersRepository.findByEmailWithRole("testUser@test.com")).thenReturn(Optional.of(usersDto));
-        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
-        when(valueOperations.get("testUser@test.com")).thenReturn(null);
+        given(usersRepository.findByEmailWithRole("testUser@test.com")).willReturn(Optional.of(usersDto));
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(valueOperations.get("testUser@test.com")).willReturn(null);
 
-        // Call method and assert exception
+        // assert exception
         assertThrows(RuntimeException.class, () -> authService.getUserInfo());
 
-        // Verify interactions
+        // verify
         verify(usersRepository).findByEmailWithRole("testUser@test.com");
         verify(redisTemplate.opsForValue()).get("testUser@test.com");
     }
-
-
 }
