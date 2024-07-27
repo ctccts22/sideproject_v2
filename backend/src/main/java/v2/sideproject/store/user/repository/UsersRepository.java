@@ -20,4 +20,6 @@ public interface UsersRepository {
 
     int saveAddresses(UsersRegisterRequest usersRegisterRequest, Long userId);
 
+    UsersDto findOneUsersInfo(String email);
+
 }

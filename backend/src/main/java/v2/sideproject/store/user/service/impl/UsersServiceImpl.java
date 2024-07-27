@@ -6,6 +6,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +20,12 @@ import v2.sideproject.store.user.models.dto.UsersDto;
 import v2.sideproject.store.user.models.vo.response.UsersDetailsResponse;
 import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.models.enums.RolesName;
+import v2.sideproject.store.user.models.vo.response.UsersOneDetailResponse;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.UsersService;
 import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
+import v2.sideproject.store.user.userDetails.CustomUserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +37,7 @@ import java.util.Optional;
 public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
     private final RolesRepository rolesRepository;
+    private final CustomUserDetails customUserDetails;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -71,6 +77,24 @@ public class UsersServiceImpl implements UsersService {
         Page<UsersDetailsResponse> usersDetailsResponsePage = new PageImpl<>(usersDetailsResponseList, pageable, usersDetailsByParams.getTotalElements());
 
         return new RestPage<>(usersDetailsResponsePage);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UsersOneDetailResponse getOneUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = customUserDetails.loadUserByUsername(authentication.getName());
+
+        log.info("usersDetails id : {}", userDetails.getUsername());
+        String email = userDetails.getUsername();
+        UsersDto userInfo = usersRepository.findOneUsersInfo(email);
+
+        return UsersOneDetailResponse.builder()
+                .email(userInfo.getEmail())
+                .name(userInfo.getName())
+                .mobileCarrier(userInfo.getMobileCarrier())
+                .phone(userInfo.getPhone())
+                .build();
     }
 
 

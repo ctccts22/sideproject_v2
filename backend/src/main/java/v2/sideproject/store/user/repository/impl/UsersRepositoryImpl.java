@@ -48,7 +48,6 @@ public class UsersRepositoryImpl implements UsersRepository {
                 ).execute();
     }
 
-
     @Override
     public Long saveUsers(UsersRegisterRequest usersRegisterRequest, String encodedPassword, RolesDto rolesDto) {
         String formattedCreatedAt = DateFormatter.format(LocalDateTime.now());
@@ -85,6 +84,18 @@ public class UsersRepositoryImpl implements UsersRepository {
     @Override
     public Optional<UsersDto> findByEmail(String email) {
         return dsl.select(USERS).from(USERS).where(eqIfNotBlank(USERS.EMAIL, email)).fetchOptionalInto(UsersDto.class);
+    }
+
+    @Override
+    public UsersDto findOneUsersInfo(String email) {
+        return dsl.select(USERS.EMAIL,
+                USERS.NAME,
+                USERS.MOBILE_CARRIER,
+                USERS.PHONE
+                )
+                .from(USERS)
+                .where(USERS.EMAIL.eq(email))
+                .fetchOneInto(UsersDto.class);
     }
 
     @Override

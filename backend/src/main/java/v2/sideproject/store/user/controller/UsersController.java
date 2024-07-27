@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.error.ErrorResponseDto;
@@ -21,6 +23,7 @@ import v2.sideproject.store.redis.utils.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
 import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
 import v2.sideproject.store.user.models.vo.response.UsersDetailsResponse;
+import v2.sideproject.store.user.models.vo.response.UsersOneDetailResponse;
 import v2.sideproject.store.user.models.vo.response.UsersStatusResponse;
 import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.service.UsersService;
@@ -55,7 +58,8 @@ public class UsersController {
                     )
             )
     })
-    @GetMapping(path = "/fetchAll")
+    @GetMapping(path = "/")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RestPage<UsersDetailsResponse>> fetchAllUsersDetails(
             @ModelAttribute UsersSearchParamsDto usersSearchParamsDto,
             Pageable pageable
@@ -65,6 +69,31 @@ public class UsersController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usersDetailsResponseDto);
+    }
+    @Operation(
+            summary = "Fetch One User RestAPI",
+            description = "Rest API to get one User's info",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    })
+    @GetMapping(path = "/users/me")
+    public ResponseEntity<UsersOneDetailResponse> getUserInfo() {
+        UsersOneDetailResponse usersOneDetailResponse = usersService.getOneUserInfo();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(usersOneDetailResponse);
     }
 
     @Operation(
