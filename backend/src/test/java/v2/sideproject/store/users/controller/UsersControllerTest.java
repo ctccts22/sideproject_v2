@@ -146,7 +146,7 @@ public class UsersControllerTest {
                 .willReturn(restPage);
 
         // When
-        ResultActions response = mockMvc.perform(get("/api/users/fetchAll")
+        ResultActions response = mockMvc.perform(get("/api/users/all")
                 .param("email", "")
                 .param("name", "")
                 .param("birth", "")

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -66,6 +67,7 @@ public class AuthServiceTest {
     private AuthServiceImpl authService;
 
     @Test
+    @DisplayName("JUnit test for login method")
     void givenLoginRequestAndResponse_whenCreateToken_thenLoginSuccess() {
         UsersLoginRequest usersLoginRequest = UsersLoginRequest.builder()
                 .email("test@test.com")
@@ -98,6 +100,7 @@ public class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("JUnit test for logout method")
     void givenLogoutMethod_whenGetUserEmail_thenReturnDeleteTokens() {
         // given
         Authentication authentication = mock(Authentication.class);
@@ -127,6 +130,7 @@ public class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("JUnit test for getToken method")
     void givenRequest_whenGetAccessToken_thenReturnAccessToken() {
         // given
         Authentication authentication = mock(Authentication.class);
@@ -163,6 +167,7 @@ public class AuthServiceTest {
 
 
     @Test
+    @DisplayName("JUnit test for getUserInfo method")
     void givenAuthenticatedUser_whenGetUserInfo_thenReturnUserInfo() {
         // given
         Authentication authentication = mock(Authentication.class);
@@ -200,6 +205,7 @@ public class AuthServiceTest {
     }
 
     @Test
+    @DisplayName("JUnit test for getUserInfo and cause exception method")
     void givenNoTokenInRedis_whenGetUserInfo_thenThrowException() {
         // given
         Authentication authentication = mock(Authentication.class);

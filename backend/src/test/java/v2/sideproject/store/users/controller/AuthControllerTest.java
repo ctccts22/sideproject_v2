@@ -2,6 +2,7 @@ package v2.sideproject.store.users.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -38,6 +39,7 @@ public class AuthControllerTest {
 
     @Test
     @WithMockCustomUser
+    @DisplayName("JUnit test for login method")
     void login_shouldReturnStatusOk() throws Exception {
         UsersLoginRequest request = UsersLoginRequest.builder()
                 .email("test@test.com")
@@ -55,6 +57,7 @@ public class AuthControllerTest {
 
     @Test
     @WithMockCustomUser
+    @DisplayName("JUnit test for logout method")
     void logout_shouldReturnStatusOk() throws Exception {
         doNothing().when(authService).logout(any(), any());
 
@@ -66,6 +69,7 @@ public class AuthControllerTest {
 
     @Test
     @WithMockCustomUser
+    @DisplayName("JUnit test for getToken method")
     void getAccessToken_shouldReturnStatusOk() throws Exception {
         doNothing().when(authService).getAccessToken(any(), any());
 
@@ -78,6 +82,7 @@ public class AuthControllerTest {
 
     @Test
     @WithMockCustomUser
+    @DisplayName("JUnit test for userInfo method")
     void getUserInfo_shouldReturnStatusOk() throws Exception {
         UsersInfoResponse response = UsersInfoResponse.builder()
                 .email("test@test.com")

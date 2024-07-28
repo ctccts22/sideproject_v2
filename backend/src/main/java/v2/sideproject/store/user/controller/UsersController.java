@@ -58,7 +58,7 @@ public class UsersController {
                     )
             )
     })
-    @GetMapping(path = "/")
+    @GetMapping(path = "/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RestPage<UsersDetailsResponse>> fetchAllUsersDetails(
             @ModelAttribute UsersSearchParamsDto usersSearchParamsDto,
@@ -88,7 +88,7 @@ public class UsersController {
                     )
             )
     })
-    @GetMapping(path = "/users/me")
+    @GetMapping(path = "/me")
     public ResponseEntity<UsersOneDetailResponse> getUserInfo() {
         UsersOneDetailResponse usersOneDetailResponse = usersService.getOneUserInfo();
         return ResponseEntity
