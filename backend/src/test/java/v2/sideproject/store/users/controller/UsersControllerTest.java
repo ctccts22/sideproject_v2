@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -20,6 +21,7 @@ import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.models.enums.*;
 import v2.sideproject.store.user.models.vo.request.AddressesRequest;
 import v2.sideproject.store.user.models.vo.response.UsersDetailsResponse;
+import v2.sideproject.store.user.models.vo.response.UsersOneDetailResponse;
 import v2.sideproject.store.user.service.impl.UsersServiceImpl;
 import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
 import v2.sideproject.store.user.models.vo.response.UsersStatusResponse;
@@ -110,7 +112,7 @@ public class UsersControllerTest {
         List<UsersDetailsResponse> userList = Arrays.asList(user1, user2);
 
         restPage = new RestPage<>(new PageImpl<>(userList, PageRequest.of(0, 10), userList.size()));
-}
+    }
 
     @DisplayName("user registration restAPI")
     @Test
@@ -135,6 +137,34 @@ public class UsersControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.statusCode").value(UsersConstants.STATUS_201))
                 .andExpect(jsonPath("$.statusMsg").value(UsersConstants.MESSAGE_201));
+    }
+
+    @DisplayName("JUnit test for getOneUserInfo method")
+    @Test
+    @WithMockCustomUser
+    void given_() throws Exception {
+        // mock
+        UsersOneDetailResponse usersOneDetailResponse = UsersOneDetailResponse.builder()
+                .email("test@test.com")
+                .name("Test User")
+                .mobileCarrier(MobileCarrier.KT)
+                .phone("123-456-7890")
+                .build();
+
+        // given
+        given(usersService.getOneUserInfo()).willReturn(usersOneDetailResponse);
+        // when
+        ResultActions response = mockMvc.perform(get("/api/users/me")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+        // then
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value(usersOneDetailResponse.getEmail()))
+                .andExpect(jsonPath("$.name").value(usersOneDetailResponse.getName()))
+                .andExpect(jsonPath("$.mobileCarrier").value(String.valueOf(usersOneDetailResponse.getMobileCarrier())))
+                .andExpect(jsonPath("$.phone").value(usersOneDetailResponse.getPhone()));
     }
 
     @DisplayName("user fetchAll restAPI")

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.error.ErrorResponseDto;
 import v2.sideproject.store.redis.utils.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
+import v2.sideproject.store.user.models.vo.request.UsersModifyInfoRequest;
 import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
 import v2.sideproject.store.user.models.vo.response.UsersDetailsResponse;
 import v2.sideproject.store.user.models.vo.response.UsersOneDetailResponse;
@@ -94,6 +95,15 @@ public class UsersController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usersOneDetailResponse);
+    }
+
+    @PutMapping(path = "/modify/me")
+    public ResponseEntity<UsersStatusResponse> updateUserInfo(
+            @Valid @RequestBody UsersModifyInfoRequest usersModifyInfoRequest) {
+        usersService.modifyUsersInfo(usersModifyInfoRequest);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new UsersStatusResponse(UsersConstants.STATUS_200, UsersConstants.MESSAGE_200));
     }
 
     @Operation(

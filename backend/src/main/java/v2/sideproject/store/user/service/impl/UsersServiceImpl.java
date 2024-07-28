@@ -17,6 +17,7 @@ import v2.sideproject.store.exception.UsersAlreadyExistsException;
 import v2.sideproject.store.redis.utils.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
 import v2.sideproject.store.user.models.dto.UsersDto;
+import v2.sideproject.store.user.models.vo.request.UsersModifyInfoRequest;
 import v2.sideproject.store.user.models.vo.response.UsersDetailsResponse;
 import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.models.enums.RolesName;
@@ -95,6 +96,12 @@ public class UsersServiceImpl implements UsersService {
                 .mobileCarrier(userInfo.getMobileCarrier())
                 .phone(userInfo.getPhone())
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void modifyUsersInfo(UsersModifyInfoRequest usersModifyInfoRequest) {
+
     }
 
 
