@@ -15,13 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.error.ErrorResponseDto;
 import v2.sideproject.store.redis.utils.RestPage;
 import v2.sideproject.store.user.constants.UsersConstants;
-import v2.sideproject.store.user.models.vo.request.UsersModifyInfoRequest;
+import v2.sideproject.store.user.models.vo.request.ConfirmChangesRequest;
+import v2.sideproject.store.user.models.vo.request.EmailVerificationRequest;
+import v2.sideproject.store.user.models.vo.request.UpdateUserInfoRequest;
 import v2.sideproject.store.user.models.vo.request.UsersRegisterRequest;
 import v2.sideproject.store.user.models.vo.response.UsersDetailsResponse;
 import v2.sideproject.store.user.models.vo.response.UsersOneDetailResponse;
@@ -97,14 +98,77 @@ public class UsersController {
                 .body(usersOneDetailResponse);
     }
 
-    @PutMapping(path = "/modify/me")
-    public ResponseEntity<UsersStatusResponse> updateUserInfo(
-            @Valid @RequestBody UsersModifyInfoRequest usersModifyInfoRequest) {
-        usersService.modifyUsersInfo(usersModifyInfoRequest);
+    @Operation(
+            summary = "Fetch Modify User Email RestAPI",
+            description = "Rest API to Modify User's Email",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    })
+    /**
+     * complex update logic generally post mapping would be better than put mapping
+     */
+    @PostMapping(path = "/users/update-email")
+    public ResponseEntity<UsersStatusResponse> updateUserEmail(
+            @RequestBody @Valid EmailVerificationRequest request) {
+        usersService.modifyUsersEmail(request);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new UsersStatusResponse(UsersConstants.STATUS_200, UsersConstants.MESSAGE_200));
     }
+
+    @Operation(
+            summary = "Fetch Modify User Info RestAPI",
+            description = "Rest API to Modify User's Info",
+            security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    })
+    @PutMapping("/users/update-info")
+    public ResponseEntity<UsersStatusResponse> updateUserInfo(@RequestBody @Valid UpdateUserInfoRequest request) {
+        usersService.modifyUsersInfo(request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new UsersStatusResponse(UsersConstants.STATUS_200, UsersConstants.MESSAGE_200));
+    }
+    @PostMapping("/confirm-changes")
+    public ResponseEntity<UsersStatusResponse> confirmChanges(@RequestBody @Valid ConfirmChangesRequest request) {
+        usersService.confirmModifyUsersInfo(request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new UsersStatusResponse(UsersConstants.STATUS_200, UsersConstants.MESSAGE_200));
+    }
+
+    @PostMapping("/rollback-changes")
+    public ResponseEntity<UsersStatusResponse> rollbackChanges() {
+        usersService.rollbackChanges();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new UsersStatusResponse(UsersConstants.STATUS_200, UsersConstants.MESSAGE_200));
+    }
+
 
     @Operation(
             summary = "Create User REST API",

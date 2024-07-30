@@ -12,12 +12,7 @@ import v2.sideproject.store.user.models.enums.MobileCarrier;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UsersModifyInfoRequest {
-    @Email
-    @NotEmpty(message = "Email cannot be null or empty")
-    @Schema(description = "Email is used for login", example = "test@test.com")
-    private String email;
-
+public class UpdateUserInfoRequest {
     @NotEmpty(message = "Name cannot be null or empty")
     @Schema(description = "User's name", example = "John Doe")
     private String name;
