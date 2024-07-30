@@ -1,8 +1,8 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomePage from '../pages/HomePage.vue'
-import AppHeader from '../layouts/AppHeader.vue'
-import AppFooter from "../layouts/AppFooter.vue";
-import AppLogin from "../pages/AppLogin.vue";
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import HomePage from '../pages/HomePage.vue';
+import AppHeader from '../layouts/AppHeader.vue';
+import AppFooter from '../layouts/AppFooter.vue';
+import AppLogin from '../pages/AppLogin.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -11,38 +11,38 @@ const routes: Array<RouteRecordRaw> = [
     components: {
       default: HomePage,
       appHeader: AppHeader,
-      appFooter: AppFooter,
+      appFooter: AppFooter
     },
     meta: {
-      requiresAuth: false,
+      requiresAuth: false
     }
   },
   {
     path: '/login',
     components: {
-      default: AppLogin,
+      default: AppLogin
     },
     meta: {
-      requiresAuth: false,
+      requiresAuth: false
     }
-  },
-]
+  }
+];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes
 });
 
 router.beforeEach((to, _, next) => {
   if (to.meta.requiresAuth && !isAuthenticated()) {
-    next('/login')
+    next('/login');
   } else {
-    next()
+    next();
   }
-})
+});
 
 function isAuthenticated() {
   return false;
 }
 
-export default router
+export default router;

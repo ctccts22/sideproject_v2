@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import {UsersLoginRequest} from "../types/users.ts";
-import {login} from "../services/usersService.ts";
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import { UsersLoginRequest } from '../types/users.ts';
+import { login } from '../services/usersService.ts';
 
 export const useUserStore = defineStore('user', () => {
   // State
@@ -14,8 +14,8 @@ export const useUserStore = defineStore('user', () => {
     return {
       isLoggedIn: isLoggedIn.value,
       loginError: loginError.value
-    }
-  })
+    };
+  });
 
   // Actions
   const usersLogin = async (loginBody: UsersLoginRequest) => {
@@ -40,11 +40,11 @@ export const useUserStore = defineStore('user', () => {
   // }
 
   function logIn() {
-    isLoggedIn.value = true
+    isLoggedIn.value = true;
   }
 
   function logOut() {
-    isLoggedIn.value = false
+    isLoggedIn.value = false;
   }
 
   return {
@@ -55,6 +55,6 @@ export const useUserStore = defineStore('user', () => {
     // setName,
     // setAge,
     logIn,
-    logOut,
-  }
-})
+    logOut
+  };
+});
