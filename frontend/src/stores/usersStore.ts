@@ -1,29 +1,43 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import {UsersLoginRequest} from "../types/users.ts";
+import {login} from "../services/usersService.ts";
 
 export const useUserStore = defineStore('user', () => {
   // State
-  const name = ref<string>('')
-  const age = ref<number>(0)
-  const isLoggedIn = ref<boolean>(false)
+  const isLoggedIn = ref<boolean>(false);
+  const loginStatus = ref<string | null>(null);
+  const loginError = ref<string | null>(null);
 
   // Getters
   const userInfo = computed(() => {
     return {
-      name: name.value,
-      age: age.value,
       isLoggedIn: isLoggedIn.value,
+      loginError: loginError.value
     }
   })
 
   // Actions
-  function setName(newName: string) {
-    name.value = newName
-  }
+  const usersLogin = async (loginBody: UsersLoginRequest) => {
+    try {
+      const data = await login(loginBody);
+      loginStatus.value = data;
 
-  function setAge(newAge: number) {
-    age.value = newAge
-  }
+      isLoggedIn.value = true;
+      loginError.value = null;
+    } catch (e) {
+      console.error('Login failed:', e);
+      loginError.value = 'Login failed. Please check your credentials and try again.';
+    }
+  };
+
+  // function setName(newName: string) {
+  //   name.value = newName
+  // }
+  //
+  // function setAge(newAge: number) {
+  //   age.value = newAge
+  // }
 
   function logIn() {
     isLoggedIn.value = true
@@ -34,12 +48,12 @@ export const useUserStore = defineStore('user', () => {
   }
 
   return {
-    name,
-    age,
     isLoggedIn,
+    loginStatus,
+    usersLogin,
     userInfo,
-    setName,
-    setAge,
+    // setName,
+    // setAge,
     logIn,
     logOut,
   }
