@@ -2,5 +2,7 @@
 </script>
 
 <template>
-  <div class="text-lime-300">Hello</div>
+  <router-view name="appHeader"></router-view>
+  <RouterView/>
+  <router-view name="appHeader"></router-view>
 </template>
