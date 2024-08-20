@@ -42,7 +42,6 @@ public class UsersServiceImpl implements UsersService {
     private final RolesRepository rolesRepository;
     private final CustomUserDetails customUserDetails;
     private final PasswordEncoder passwordEncoder;
-    private final JavaMailSender javaMailSender;
 
     @Override
     @Transactional

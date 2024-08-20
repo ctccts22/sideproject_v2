@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import v2.sideproject.store.user.models.enums.AddressesType;
 
 @Schema(
@@ -12,8 +13,9 @@ import v2.sideproject.store.user.models.enums.AddressesType;
         description = "Schema to hold successful response Users Address information"
 )
 @Getter
-@Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class AddressesRequest {
     @NotEmpty(message = "mainAddress cannot be null or empty")
     @Schema(description = "User's mainAddress", example = "봉천동")

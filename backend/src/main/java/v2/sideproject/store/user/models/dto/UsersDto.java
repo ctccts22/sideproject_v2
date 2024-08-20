@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
 @ToString
 public class UsersDto {
 //    public class UsersDto implements Serializable {

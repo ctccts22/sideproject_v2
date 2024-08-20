@@ -7,6 +7,7 @@ import v2.sideproject.store.user.models.enums.AddressesType;
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
 @ToString
 public class AddressesDto {
     private Long addressesId;

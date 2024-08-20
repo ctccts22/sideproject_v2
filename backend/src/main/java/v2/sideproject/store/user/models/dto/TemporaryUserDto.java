@@ -9,6 +9,7 @@ import v2.sideproject.store.user.models.enums.UpdateStatus;
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
 @ToString
 public class TemporaryUserDto {
     @Email

@@ -87,7 +87,7 @@ jooq {
                     name = 'org.jooq.codegen.DefaultGenerator'
                     database {
                         name = 'org.jooq.meta.postgres.PostgresDatabase'
-                        inputSchema = 'public'
+                        inputSchema = project.findProperty('db.schema') ?: 'default_url'
                         forcedTypes {
                             forcedType {
                                 name = 'varchar'

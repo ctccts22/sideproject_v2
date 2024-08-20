@@ -10,10 +10,10 @@ import v2.sideproject.store.user.models.enums.MobileCarrier;
 import v2.sideproject.store.user.models.enums.RolesName;
 import v2.sideproject.store.user.models.enums.UsersStatus;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
 public class UsersDetailsResponse {
 
     @Email

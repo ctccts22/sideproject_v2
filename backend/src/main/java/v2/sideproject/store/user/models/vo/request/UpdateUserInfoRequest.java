@@ -8,7 +8,6 @@ import lombok.*;
 import v2.sideproject.store.user.models.enums.MobileCarrier;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

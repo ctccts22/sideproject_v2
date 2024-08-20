@@ -10,10 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import v2.sideproject.store.user.models.enums.MobileCarrier;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
 public class UsersOneDetailResponse {
 
     @Email

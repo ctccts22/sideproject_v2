@@ -9,6 +9,7 @@ import v2.sideproject.store.user.models.enums.RolesName;
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
 @ToString
 public class RolesDto {
     private String roleId;

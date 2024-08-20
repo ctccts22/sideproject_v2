@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import v2.sideproject.store.user.models.enums.Gender;
 import v2.sideproject.store.user.models.enums.MobileCarrier;
 import v2.sideproject.store.user.models.enums.UsersStatus;
@@ -16,8 +17,9 @@ import v2.sideproject.store.user.models.enums.UsersStatus;
         description = "Schema to hold successful response Users Detail information"
 )
 @Getter
-@Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UsersRegisterRequest {
 
     @Email
