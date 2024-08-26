@@ -1,13 +1,20 @@
-import { useState } from 'react'
+// App.js
+// import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div className="text-xs text-amber-400">test</div>
-    </>
-  )
+    <QueryClientProvider client={queryClient}>
+      {/*<Router>*/}
+      {/*  <Routes>*/}
+      {/*    <Route path="/" element={<HomePage />} />*/}
+      {/*    <Route path="/profile" element={<ProfilePage />} />*/}
+      {/*  </Routes>*/}
+      {/*</Router>*/}
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
