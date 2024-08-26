@@ -110,15 +110,7 @@ public class JwtTokenProvider {
         return null;
     }
 
-    public boolean validateTokenWithDate(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSignKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        Date now = new Date();
-        return claims.getExpiration().after(now);
-    }
+
 
     public boolean validateToken(String token) {
         try {
@@ -154,5 +146,9 @@ public class JwtTokenProvider {
 
     public void deleteRefreshTokenCookie(HttpServletResponse response, String refreshTokenKey) {
         createRefreshTokenCookie(response, refreshTokenKey, "", 0);
+    }
+
+    public void deleteRefreshToken(String redisTokenKey) {
+        redisTemplate.delete(redisTokenKey);
     }
 }

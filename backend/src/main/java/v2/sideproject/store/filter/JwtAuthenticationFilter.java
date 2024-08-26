@@ -3,6 +3,7 @@ package v2.sideproject.store.filter;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 import v2.sideproject.store.jwt.JwtTokenProvider;
 import v2.sideproject.store.user.userDetails.CustomUserDetails;
+import v2.sideproject.store.utils.CookieUtil;
 
 import java.io.IOException;
 
@@ -30,10 +32,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
         String token = jwtTokenProvider.getAccessTokenOnHeader(request);
 
         try {
+            if (hasText(token) && !jwtTokenProvider.validateToken(token)) {
+                // expired Token -> logout
+                jwtTokenProvider.deleteRefreshTokenCookie(response, "refreshToken");
+                Cookie refreshTokenCookie = CookieUtil.getCookie(request, "refreshToken");
+
+                if (refreshTokenCookie != null) {
+                    String refreshToken = refreshTokenCookie.getValue();
+                    jwtTokenProvider.deleteRefreshToken(refreshToken);
+                }
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Expired JWT token");
+                return;
+            }
+
             if (hasText(token) && jwtTokenProvider.validateToken(token)) {
                 String email = jwtTokenProvider.getEmailFromToken(token);
                 UserDetails userDetails = customUserDetails.loadUserByUsername(email);
@@ -46,13 +60,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-        } catch (ExpiredJwtException e) {
-            log.warn("Expired JWT token", e);
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Expired JWT token");
         } catch (Exception e) {
             log.error("JWT authentication failed", e);
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication failed");
+            return;
         }
+
         filterChain.doFilter(request, response);
     }
 }

@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
             if (accessToken == null || !jwtTokenProvider.validateToken(accessToken)) {
                 if (refreshToken != null) {
                     jwtTokenProvider.deleteRefreshTokenCookie(response, "refreshToken");
-                    redisTemplate.delete(refreshToken);
+                    jwtTokenProvider.deleteRefreshToken(refreshToken);
                 }
                 // Create new tokens
                 accessToken = jwtTokenProvider.createAccessToken(authentication);
@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
         if (refreshTokenCookie != null) {
             // refreshToken delete
             jwtTokenProvider.deleteRefreshTokenCookie(response, "refreshToken");
-            redisTemplate.delete(refreshTokenCookie.getValue());
+            jwtTokenProvider.deleteRefreshToken(refreshTokenCookie.getValue());
         }
     }
 
