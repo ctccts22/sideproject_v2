@@ -110,6 +110,16 @@ public class JwtTokenProvider {
         return null;
     }
 
+    public boolean validateTokenWithDate(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSignKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        Date now = new Date();
+        return claims.getExpiration().after(now);
+    }
+
     public boolean validateToken(String token) {
         try {
             Claims claims = Jwts.parser()
@@ -122,7 +132,8 @@ public class JwtTokenProvider {
         } catch (MalformedJwtException ex) {
             throw new APIException(HttpStatus.BAD_REQUEST, "Invaild JWT token");
         } catch (ExpiredJwtException ex) {
-            throw new APIException(HttpStatus.BAD_REQUEST, "Expired JWT token");
+            log.warn("Token expired", ex);
+            return false;
         } catch (UnsupportedJwtException ex) {
             throw new APIException(HttpStatus.BAD_REQUEST, "Unsupported JWT token");
         } catch (IllegalArgumentException ex) {

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import v2.sideproject.store.jwt.JwtTokenProvider;
 import v2.sideproject.store.user.constants.AuthConstants;
+import v2.sideproject.store.user.models.dto.TokensDto;
 import v2.sideproject.store.user.models.vo.request.UsersLoginRequest;
 import v2.sideproject.store.user.models.vo.response.UsersInfoResponse;
 import v2.sideproject.store.user.service.AuthService;
@@ -41,21 +42,34 @@ public class AuthServiceImpl implements AuthService {
                     new UsernamePasswordAuthenticationToken(usersLoginRequest.getEmail(), usersLoginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            String accessToken = getAccessToken(request);
-            String refreshToken;
+            String accessToken = null;
+            String refreshToken = null;
 
-            if (accessToken == null) {
+            // Retrieve existing tokens
+            TokensDto tokens = getAccessToken(request);
+            accessToken = tokens.getAccessToken();
+            refreshToken = tokens.getRefreshToken();
+
+            // If access token is expired or null
+            if (accessToken == null || !jwtTokenProvider.validateToken(accessToken)) {
+                if (refreshToken != null) {
+                    jwtTokenProvider.deleteRefreshTokenCookie(response, "refreshToken");
+                    redisTemplate.delete(refreshToken);
+                }
+                // Create new tokens
                 accessToken = jwtTokenProvider.createAccessToken(authentication);
                 refreshToken = jwtTokenProvider.createRefreshToken(accessToken);
-
                 jwtTokenProvider.createRefreshTokenCookie(response, "refreshToken", refreshToken, maxAgeForCookie);
             }
 
+            // Add the new access token to the response header
             response.addHeader("Authorization", "Bearer " + accessToken);
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(AuthConstants.MESSAGE_401);
         }
     }
+
+
 
 
 
@@ -73,8 +87,10 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public UsersInfoResponse getUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        String accessToken = getAccessToken(request);
+        TokensDto tokens = getAccessToken(request);
+        String accessToken = tokens.getAccessToken();
         UsersInfoResponse usersInfoResponse = UsersInfoResponse.builder()
                 .email(jwtTokenProvider.getEmailFromToken(accessToken))
                 .role(jwtTokenProvider.getRoleFromToken(accessToken))
@@ -84,9 +100,9 @@ public class AuthServiceImpl implements AuthService {
         return usersInfoResponse;
     }
 
-    private String getAccessToken(HttpServletRequest request) {
+    private TokensDto getAccessToken(HttpServletRequest request) {
         String accessToken = null;
-        String refreshToken;
+        String refreshToken = null;
 
         // Check for existing refresh token in cookies
         Cookie refreshTokenCookie = CookieUtil.getCookie(request, "refreshToken");
@@ -99,6 +115,9 @@ public class AuthServiceImpl implements AuthService {
             accessToken = jwtTokenProvider.getAccessTokenByRefreshToken(refreshToken);
             log.info("Access Token (generated): {}", accessToken);
         }
-        return accessToken;
+        return TokensDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 }
