@@ -123,6 +123,7 @@ public class AuthController {
             HttpServletResponse response
     ) {
         UsersInfoResponse usersInfo = authService.getUserInfo(request, response);
+        log.info("userInfo : {}", usersInfo);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usersInfo);

@@ -1,21 +1,48 @@
-import React from 'react';
-import { useAuthQuery } from '../query/auth/authQuery.js';
+import React, { useState } from 'react';
+import { useLoginMutation } from '../query/auth/authQuery.js';
 import useAuthStore from '../stores/auth/authStore.js';
 
 function Login() {
-  const { userInfo } = useAuthStore();
-  const { data, isLoading, isError } = useAuthQuery();
+  const { userLoginRequest, setUserLoginRequest, userInfo } = useAuthStore();
+  const [email, setEmail] = useState(userLoginRequest.email || '');
+  const [password, setPassword] = useState(userLoginRequest.password || '');
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error loading user data</p>;
+  const loginMutation = useLoginMutation();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    loginMutation.mutate({ email, password });
+  };
+
+  if (loginMutation.isLoading) return <p>Loading...</p>;
+  if (loginMutation.isError) return <p>Error during login</p>;
 
   return (
     <div>
-      <h1>Profile Page</h1>
-      <p>Email: {userInfo.email}</p>
-      <p>Role: {userInfo.role}</p>
+      <h1>Login</h1>
+      <div>{userInfo.email}</div>
+      <div>{userInfo.role}</div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 }
 
-export default Login;
+export default Login
