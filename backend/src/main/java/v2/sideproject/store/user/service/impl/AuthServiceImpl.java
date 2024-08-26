@@ -22,11 +22,6 @@ import v2.sideproject.store.user.service.AuthService;
 import v2.sideproject.store.user.userDetails.CustomUserDetails;
 import v2.sideproject.store.utils.CookieUtil;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import static org.springframework.util.StringUtils.*;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -69,22 +64,12 @@ public class AuthServiceImpl implements AuthService {
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = customUserDetails.loadUserByUsername(authentication.getName());
-
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            Optional<String> cookieValue = Arrays.stream(cookies)
-                    .filter(c -> "refreshToken".equals(c.getName()) && hasText(c.getValue()))
-                    .map(Cookie::getValue)
-                    .findFirst();
-
-            cookieValue.ifPresent(value -> {
-                jwtTokenProvider.deleteRefreshTokenCookie(response, "refreshToken");
-                // refreshToken delete
-                redisTemplate.delete(value);
-            });
+        Cookie refreshTokenCookie = CookieUtil.getCookie(request, "refreshToken");
+        if (refreshTokenCookie != null) {
+            // refreshToken delete
+            jwtTokenProvider.deleteRefreshTokenCookie(response, "refreshToken");
+            redisTemplate.delete(refreshTokenCookie.getValue());
         }
-        // accessToken delete
-        redisTemplate.delete(userDetails.getUsername());
     }
 
     @Override

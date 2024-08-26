@@ -4,8 +4,9 @@ public class AuthConstants {
     private AuthConstants() {
     }
     public static final String STATUS_200 = "200";
+    public static final String STATUS_204 = "204";
     public static final String MESSAGE_Login_200 = "Login Successful";
-    public static final String MESSAGE_Logout_200 = "Logout Successful";
+    public static final String MESSAGE_Logout_204 = "Logout Successful";
     public static final String MESSAGE_TOKEN_200 = "GET TOKEN Successful";
     public static final String MESSAGE_401 = "Login Failed : Password Incorrect";
     public static final String MESSAGE_404 = "Login Failed : ID Not Found";

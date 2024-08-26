@@ -75,8 +75,8 @@ public class AuthController {
     )
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP STATUS OK"
+                    responseCode = "204",
+                    description = "HTTP NO_CONTENT"
             ),
             @ApiResponse(
                     responseCode = "500",
@@ -94,8 +94,8 @@ public class AuthController {
             HttpServletRequest request) {
         authService.logout(request, response);
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new UsersStatusResponse(AuthConstants.STATUS_200, AuthConstants.MESSAGE_Logout_200));
+                .status(HttpStatus.NO_CONTENT)
+                .body(new UsersStatusResponse(AuthConstants.STATUS_204, AuthConstants.MESSAGE_Logout_204));
     }
 
     @Operation(

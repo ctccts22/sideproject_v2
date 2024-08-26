@@ -65,6 +65,6 @@ public class AuthControllerTest {
         mockMvc.perform(post("/api/auth/logout")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 }
