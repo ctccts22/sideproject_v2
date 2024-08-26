@@ -20,5 +20,5 @@ public class UsersInfoResponse  {
 
     @NotNull(message = "roleName cannot be null or empty")
     @Schema(description = "User's roleName", example = "ADMIN")
-    private RolesName roleName;
+    private String role;
 }

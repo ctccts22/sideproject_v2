@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import v2.sideproject.store.exception.APIException;
+import v2.sideproject.store.user.models.enums.RolesName;
 import v2.sideproject.store.user.repository.UsersRepository;
 
 import javax.crypto.SecretKey;
@@ -35,14 +36,13 @@ public class JwtTokenProvider {
     private Long accessTokenValid;
 
     private final RedisTemplate<String, String> redisTemplate;
-    private final UsersRepository usersRepository;
 
     public SecretKey getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(this.secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String publishAccessToken(Authentication authentication) {
+    public String generateAccessToken(Authentication authentication) {
         Date now = new Date();
         Date accessValidDate = new Date(now.getTime() + accessTokenValid);
         return Jwts.builder()
@@ -54,46 +54,14 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String createRefreshToken(Authentication authentication) {
+    public String createRefreshToken(String accessToken) {
         UUID refreshTokenUUID = UUID.randomUUID();
-        redisTemplate.opsForValue().set(refreshTokenUUID.toString(), authentication.getName(), Duration.ofDays(1));
+        redisTemplate.opsForValue().set(refreshTokenUUID.toString(), accessToken, Duration.ofDays(1));
         return String.valueOf(refreshTokenUUID);
     }
 
     public String createAccessToken(Authentication authentication) {
-        usersRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        String accessToken = publishAccessToken(authentication);
-        redisTemplate.opsForValue().set(authentication.getName(), accessToken, Duration.ofMinutes(30));
-        return accessToken;
-    }
-
-    public String searchAccessTokenByRefreshToken(String refreshToken) {
-        String email = redisTemplate.opsForValue().get(refreshToken);
-        if (hasText(email)) {
-            String accessToken = redisTemplate.opsForValue().get(email);
-            if (hasText(accessToken)) {
-                return accessToken;
-            } else {
-                redisTemplate.delete(refreshToken);
-            }
-        } else {
-            redisTemplate.delete(refreshToken);
-        }
-        return null;
-    }
-
-
-    public void searchAccessTokenByEmail(Authentication authentication) {
-        String email = authentication.getName();
-        String accessToken = redisTemplate.opsForValue().get(email);
-
-        if (hasText(accessToken)) {
-            redisTemplate.delete(email);
-        }
-        createAccessToken(authentication);
-        createRefreshToken(authentication);
+        return generateAccessToken(authentication);
     }
 
     public String getEmailFromToken(String token) {
@@ -105,10 +73,39 @@ public class JwtTokenProvider {
         return String.valueOf(claims.get("email"));
     }
 
-    public String resolveToken(HttpServletRequest request) {
+    public String getRoleFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSignKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        // Extract the role string
+        String roleString = String.valueOf(claims.get("role"));
+
+        // Decode to get only the role name
+        return extractRoleName(roleString);
+    }
+
+    private String extractRoleName(String roleString) {
+        int start = roleString.indexOf("ROLE_") + 5;
+        int end = roleString.indexOf('}', start);
+
+        return roleString.substring(start, end);
+    }
+
+
+    public String getAccessTokenOnHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    public String getAccessTokenByRefreshToken(String refreshTokenUUID) {
+        if (refreshTokenUUID != null) {
+            return redisTemplate.opsForValue().get(refreshTokenUUID);
         }
         return null;
     }

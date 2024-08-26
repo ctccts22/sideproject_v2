@@ -17,11 +17,4 @@ public interface UsersService {
 
     UsersOneDetailResponse getOneUserInfo();
 
-    void modifyUsersEmail(EmailVerificationRequest request);
-
-    void modifyUsersInfo(UpdateUserInfoRequest request);
-
-    void confirmModifyUsersInfo(ConfirmChangesRequest request);
-
-    void rollbackChanges();
 }

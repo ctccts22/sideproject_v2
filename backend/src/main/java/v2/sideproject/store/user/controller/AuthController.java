@@ -18,8 +18,8 @@ import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import v2.sideproject.store.user.constants.AuthConstants;
 import v2.sideproject.store.user.models.vo.request.UsersLoginRequest;
-import v2.sideproject.store.user.service.AuthService;
 import v2.sideproject.store.user.models.vo.response.UsersInfoResponse;
+import v2.sideproject.store.user.service.AuthService;
 import v2.sideproject.store.user.models.vo.response.UsersStatusResponse;
 
 
@@ -61,8 +61,9 @@ public class AuthController {
     )
     @PostMapping(path = "/login")
     public ResponseEntity<UsersStatusResponse> Login(@RequestBody UsersLoginRequest usersLoginRequest,
+                                                     HttpServletRequest request,
                                                      HttpServletResponse response) throws BadRequestException {
-        authService.login(usersLoginRequest, response);
+        authService.login(usersLoginRequest, request, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new UsersStatusResponse(AuthConstants.STATUS_200, AuthConstants.MESSAGE_Login_200));
@@ -87,7 +88,7 @@ public class AuthController {
 
     }
     )
-    @PostMapping(path ="/logout")
+    @PostMapping(path = "/logout")
     public ResponseEntity<UsersStatusResponse> Logout(
             HttpServletResponse response,
             HttpServletRequest request) {
@@ -116,41 +117,15 @@ public class AuthController {
             )
 
     })
-    @GetMapping(path ="/accessToken")
-    public ResponseEntity<UsersStatusResponse> getAccessToken(
+    @GetMapping(path ="/refresh")
+    public ResponseEntity<UsersInfoResponse> getAccessToken(
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        authService.getAccessToken(request, response);
+        UsersInfoResponse usersInfo = authService.getUserInfo(request, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new UsersStatusResponse(AuthConstants.STATUS_200, AuthConstants.MESSAGE_TOKEN_200));
-    }
-
-    @Operation(
-            summary = "Response email and role to frontend Rest API",
-            description = "This API can aDtoid to use local storage to save usersInfo. Any frontend lib&framework just utilize this API" +
-                    "to use navigation guard(In order to protect get into the page against unknown users"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP STATUS OK"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponse.class)
-                    )
-            )
-
-    })
-    @GetMapping(path ="/usersInfo")
-    public ResponseEntity<UsersInfoResponse> getUserInfo() {
-        UsersInfoResponse usersInfoResponse = authService.getUserInfo();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(usersInfoResponse);
+                .body(usersInfo);
     }
 
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import v2.sideproject.store.security.WithMockCustomUser;
@@ -46,7 +47,7 @@ public class AuthControllerTest {
                 .password("test")
                 .build();
 
-        doNothing().when(authService).login(any(UsersLoginRequest.class), any(MockHttpServletResponse.class));
+        doNothing().when(authService).login(any(UsersLoginRequest.class), any(MockHttpServletRequest.class), any(MockHttpServletResponse.class));
 
         mockMvc.perform(post("/api/auth/login")
                         .with(csrf())
@@ -62,36 +63,6 @@ public class AuthControllerTest {
         doNothing().when(authService).logout(any(), any());
 
         mockMvc.perform(post("/api/auth/logout")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockCustomUser
-    @DisplayName("JUnit test for getToken method")
-    void getAccessToken_shouldReturnStatusOk() throws Exception {
-        doNothing().when(authService).getAccessToken(any(), any());
-
-        mockMvc.perform(get("/api/auth/accessToken")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .cookie(new Cookie("refreshToken", "testRefreshToken")))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockCustomUser
-    @DisplayName("JUnit test for userInfo method")
-    void getUserInfo_shouldReturnStatusOk() throws Exception {
-        UsersInfoResponse response = UsersInfoResponse.builder()
-                .email("test@test.com")
-                .roleName(RolesName.ADMIN)
-                .build();
-
-        when(authService.getUserInfo()).thenReturn(response);
-
-        mockMvc.perform(get("/api/auth/usersInfo")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
