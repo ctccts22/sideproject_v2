@@ -1,21 +1,29 @@
 import React, { useEffect } from 'react';
-import { useRefreshQuery } from './query/auth/authQuery.js';
+import axios from './plugin/axios.js';
 import useAuthStore from './stores/auth/authStore.js';
 
 const AppInitializer = ({ children }) => {
-  const { isLoading, setLoading } = useAuthStore();
-  const refetch = useRefreshQuery();
+  const { userInfo, setUserInfo, setIsAuthenticated, setLoading } = useAuthStore();
 
   useEffect(() => {
-    // Trigger the refresh query when the app starts
-    refetch();
-  }, [refetch]);
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get('/api/auth/refresh');
+        const { email, role } = response.data;
+        setUserInfo(email, role);
+        setIsAuthenticated(true);
+        console.log(userInfo);
+      } catch (error) {
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (isLoading) {
-    return <div>Loading...</div>; // Render a loading indicator while the app is initializing
-  }
+    fetchUserInfo();
+  }, [setUserInfo, setIsAuthenticated, setLoading]);
 
-  return <>{children}</>; // Render the children (the app) once initialization is complete
+  return <>{children}</>;
 };
 
 export default AppInitializer;
