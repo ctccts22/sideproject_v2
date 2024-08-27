@@ -48,14 +48,16 @@ public class SecurityConfig {
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize)->
                         authorize
-                                .requestMatchers("/api/users/**",
+                                .requestMatchers(
+                                        "/api/users/**",
                                         "/api/auth/login",
                                         "/api/auth/logout",
                                         "/api/auth/refresh",
                                         "/docs",
                                         "/swagger-ui/index.html",
                                         "/v3/**",
-                                        "/swagger-ui/**").permitAll()
+                                        "/swagger-ui/**",
+                                        "/api/test").permitAll()
                                 .requestMatchers("/api/auth/**").authenticated())
                 .addFilterAt(new AuthoritiesLoggingAtFilter(),BasicAuthenticationFilter.class)
                 .addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)
