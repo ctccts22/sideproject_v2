@@ -22,7 +22,6 @@ instance.interceptors.request.use(async (config) => {
 
   if (config.url !== '/api/auth/refresh') {
     try {
-      setLoading(true);
       console.log('Attempting to refresh token.');
 
       // Call the refresh endpoint

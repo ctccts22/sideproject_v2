@@ -5,6 +5,7 @@ import Login from './pages/Login.jsx';
 import HomePage from './pages/HomePage.jsx';
 import ProtectedRoute from './routes/ProtectRoute.jsx';
 import Example from './pages/Example.jsx';
+import AppInitializer from './AppInitializer.jsx';
 
 const queryClient = new QueryClient();
 
@@ -12,13 +13,16 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Router>
-        <Routes>
-          <Route path="/example" element={<ProtectedRoute element={<Example />} allowedRoles={['SUPER']} />} />
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </Router>
+      <AppInitializer>
+        <Router>
+          <Routes>
+            <Route path="/" element={<ProtectedRoute element={<HomePage />} allowedRoles={['SUPER']} />} />
+            <Route path="/example" element={<ProtectedRoute element={<Example />} allowedRoles={['SUPER']} />} />
+            {/*<Route path="/" element={<HomePage />} />*/}
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </Router>
+      </AppInitializer>
     </QueryClientProvider>
   );
 }
