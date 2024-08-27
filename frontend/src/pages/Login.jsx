@@ -12,6 +12,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     loginMutation.mutate({ email, password });
+
   };
 
   if (loginMutation.isLoading) return <p>Loading...</p>;
@@ -40,6 +41,7 @@ function Login() {
           />
         </div>
         <button type="submit">Login</button>
+        <button type="button">Logout</button>
       </form>
     </div>
   );

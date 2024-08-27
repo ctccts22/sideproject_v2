@@ -11,10 +11,12 @@ const useAuthStore = create((set) => ({
     role: null,
   },
   isAuthenticated: false,
+  isInitialLogin: false,
 
   setUserLoginRequest: (email, password) => set({userLoginRequest: {email, password}}),
   setUserInfo: (email, role) => set({ userInfo: { email, role } }),
   setIsAuthenticated: (auth) => set({ isAuthenticated: auth }),
+  setInitialLogin: (login) => set({ isInitialLogin: login }),
 }));
 
 export default useAuthStore;

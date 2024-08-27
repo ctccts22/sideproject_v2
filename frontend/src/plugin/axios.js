@@ -1,6 +1,5 @@
-import axios from 'axios';
 import useAuthStore from '../stores/auth/authStore.js';
-import Cookies from 'js-cookie';
+import axios from 'axios';
 
 const API_DEV_URL = 'http://localhost:8080';
 
@@ -15,6 +14,10 @@ const instance = axios.create({
 // Request interceptor
 instance.interceptors.request.use(async (config) => {
   const { setUserInfo } = useAuthStore.getState();
+
+  if (config.url === '/api/auth/login') {
+    return config; // Skip any refresh logic during login
+  }
 
   if (config.url !== '/api/auth/refresh') {
     try {
@@ -31,8 +34,6 @@ instance.interceptors.request.use(async (config) => {
     } catch (error) {
       console.error('Failed to refresh token:', error.message);
     }
-  } else {
-    console.log('No refreshToken found or current request is refresh token request.');
   }
 
   return config;
