@@ -50,7 +50,12 @@ public class SecurityConfig {
                         authorize
                                 .requestMatchers("/api/users/**",
                                         "/api/auth/login",
-                                        "/api/auth/logout","/api/auth/accessToken", "/docs", "/swagger-ui/index.html", "/v3/**", "/swagger-ui/**").permitAll()
+                                        "/api/auth/logout",
+                                        "/api/auth/refresh",
+                                        "/docs",
+                                        "/swagger-ui/index.html",
+                                        "/v3/**",
+                                        "/swagger-ui/**").permitAll()
                                 .requestMatchers("/api/auth/**").authenticated())
                 .addFilterAt(new AuthoritiesLoggingAtFilter(),BasicAuthenticationFilter.class)
                 .addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)

@@ -16,20 +16,17 @@ const instance = axios.create({
 instance.interceptors.request.use(async (config) => {
   const { setUserInfo } = useAuthStore.getState();
 
-  // Check if the "refreshToken" cookie is present
-  const refreshToken = Cookies.get('refreshToken');
-
   if (config.url !== '/api/auth/refresh') {
     try {
       console.log('Found refreshToken, attempting to refresh.');
 
       // Call the refresh endpoint
-      const response = await axios.get('/api/auth/refresh', {
+      const response = await instance.get('/api/auth/refresh', {
         withCredentials: true,
       });
-
+      console.log(response.data);
       const { email, role } = response.data;
-      console.log('Refreshed token data:', email, role);
+
       setUserInfo(email, role);
     } catch (error) {
       console.error('Failed to refresh token:', error.message);
