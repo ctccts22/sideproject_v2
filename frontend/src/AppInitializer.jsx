@@ -6,6 +6,7 @@ const AppInitializer = ({ children }) => {
   const { userInfo, setUserInfo, setIsAuthenticated, setLoading } = useAuthStore();
 
   useEffect(() => {
+    console.log('Effect triggered');
     const fetchUserInfo = async () => {
       try {
         const response = await axios.get('/api/auth/refresh');

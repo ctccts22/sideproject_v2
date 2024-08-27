@@ -14,25 +14,6 @@ export const useFetchTest = () => {
   });
 };
 
-export const useRefreshQuery = () => {
-  const { setUserInfo, setIsAuthenticated, setLoading } = useAuthStore();
-
-  return useQuery({
-    queryKey: ['refresh-query'],
-    queryFn: refresh,
-    staleTime: 60000,
-    onSuccess: (data) => {
-      setUserInfo(data.email, data.role);
-      setIsAuthenticated(true);
-      setLoading(false);
-    },
-    onError: () => {
-      setIsAuthenticated(false);
-      setLoading(false); // Set loading to false if there's an error
-    },
-  });
-};
-
 export const useLoginMutation = () => {
   const navigate = useNavigate();
   const setUserInfo = useAuthStore((state) => state.setUserInfo);
