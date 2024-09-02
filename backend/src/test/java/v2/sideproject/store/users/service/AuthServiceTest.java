@@ -3,12 +3,9 @@ package v2.sideproject.store.users.service;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,15 +17,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import v2.sideproject.store.jwt.JwtTokenProvider;
-import v2.sideproject.store.user.models.dto.RolesDto;
+import v2.sideproject.store.user_management_service.security.jwt.JwtTokenProvider;
 import v2.sideproject.store.user.models.dto.UsersDto;
-import v2.sideproject.store.user.models.enums.Gender;
-import v2.sideproject.store.user.models.enums.MobileCarrier;
-import v2.sideproject.store.user.models.enums.RolesName;
-import v2.sideproject.store.user.models.enums.UsersStatus;
 import v2.sideproject.store.user.models.vo.request.UsersLoginRequest;
-import v2.sideproject.store.user.models.vo.response.UsersInfoResponse;
 import v2.sideproject.store.user.repository.RolesRepository;
 import v2.sideproject.store.user.repository.UsersRepository;
 import v2.sideproject.store.user.service.impl.AuthServiceImpl;
@@ -36,7 +27,6 @@ import v2.sideproject.store.user.userDetails.CustomUserDetails;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)

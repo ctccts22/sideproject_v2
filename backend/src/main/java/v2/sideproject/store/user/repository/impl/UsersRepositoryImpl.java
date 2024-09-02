@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static v2.sideproject.store.jooq.utils.JooqStringConditionUtils.*;
+import static v2.sideproject.store.common.jooq.JooqStringConditionUtils.*;
 import static v2.sideproject.store.tables.Addresses.*;
 import static v2.sideproject.store.tables.Roles.*;
 import static v2.sideproject.store.tables.Users.USERS;

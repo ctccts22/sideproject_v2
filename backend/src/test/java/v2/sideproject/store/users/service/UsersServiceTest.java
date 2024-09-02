@@ -1,7 +1,6 @@
 package v2.sideproject.store.users.service;
 
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,8 +17,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-import v2.sideproject.store.redis.utils.RestPage;
+import v2.sideproject.store.common.db.redis.utils.RestPage;
 import v2.sideproject.store.user.models.condition.UsersSearchParamsDto;
 import v2.sideproject.store.user.models.dto.RolesDto;
 import v2.sideproject.store.user.models.dto.UsersDto;

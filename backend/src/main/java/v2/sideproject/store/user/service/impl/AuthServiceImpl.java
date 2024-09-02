@@ -14,7 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import v2.sideproject.store.jwt.JwtTokenProvider;
+import v2.sideproject.store.user_management_service.security.jwt.JwtTokenProvider;
 import v2.sideproject.store.user.constants.AuthConstants;
 import v2.sideproject.store.user.models.dto.TokensDto;
 import v2.sideproject.store.user.models.vo.request.UsersLoginRequest;

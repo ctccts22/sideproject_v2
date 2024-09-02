@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
-import v2.sideproject.store.jooq.utils.JooqStringConditionUtils;
+import v2.sideproject.store.common.jooq.JooqStringConditionUtils;
 import v2.sideproject.store.user.models.enums.RolesName;
 import v2.sideproject.store.user.models.dto.RolesDto;
 import v2.sideproject.store.user.repository.RolesRepository;
