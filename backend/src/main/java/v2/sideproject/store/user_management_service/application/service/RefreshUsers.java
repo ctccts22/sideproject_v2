@@ -22,7 +22,7 @@ public class RefreshUsers implements RefreshUsersUseCase {
     private final RefreshUsersPort refreshUsersPort;
 
     @Override
-    public Users getUserInfo(HttpServletRequest request, HttpServletResponse response) {
+    public RefreshUsersResponse getUserInfo(HttpServletRequest request, HttpServletResponse response) {
         TokensDto tokens = jwtTokenProvider.getAccessToken(request);
         String accessToken = tokens.getAccessToken();
 
@@ -33,6 +33,11 @@ public class RefreshUsers implements RefreshUsersUseCase {
 
         response.addHeader("Authorization", "Bearer " + accessToken);
 
-        return refreshUsersPort.getUserInfo(users);
+        RefreshUsersResponse refreshUsersResponse = RefreshUsersResponse.builder()
+                .email(users.getEmail())
+                .build();
+
+
+        return refreshUsersPort.findUserInfo(refreshUsersResponse);
     }
 }

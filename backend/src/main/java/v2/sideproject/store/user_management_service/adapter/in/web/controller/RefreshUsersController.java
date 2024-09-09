@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import v2.sideproject.store.common.annotation.WebAdapter;
 import v2.sideproject.store.user_management_service.adapter.in.web.response.RefreshUsersResponse;
 import v2.sideproject.store.user_management_service.application.port.in.RefreshUsersUseCase;
-import v2.sideproject.store.user_management_service.domain.Users;
 
 
 @WebAdapter
@@ -55,9 +54,9 @@ public class RefreshUsersController {
             HttpServletResponse response
     ) {
         // return response value
-        Users refreshUsersResponse = refreshUsersUseCase.getUserInfo(request, response);
+        RefreshUsersResponse refreshUsersResponse = refreshUsersUseCase.getUserInfo(request, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .build(refreshUsersResponse);
+                .body(refreshUsersResponse);
     }
 }

@@ -1,4 +1,4 @@
-package v2.sideproject.store.user_management_service.application.dto;
+package v2.sideproject.store.user_management_service.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
